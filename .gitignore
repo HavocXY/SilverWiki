@@ -1,0 +1,9 @@
+# BookStack repository is managed separately as a clean clone
+/bookstack/
+
+# IDE / System files
+.vscode/
+.idea/
+.DS_Store
+*.code-workspace
+thumbs.db

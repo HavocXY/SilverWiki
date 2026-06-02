@@ -1,0 +1,555 @@
+/* ============================================================================
+   SilverWiki — Google Gemini 'Neural Expressive' Premium Theme Overlay
+   ============================================================================ */
+
+@import url('https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800;900&family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@300;400;500;600;700;800&family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200');
+
+/* Material symbols */
+.material-symbols-outlined {
+  font-family: 'Material Symbols Outlined';
+  font-weight: normal;
+  font-style: normal;
+  font-size: 24px;
+  line-height: 1;
+  letter-spacing: normal;
+  text-transform: none;
+  display: inline-block;
+  white-space: nowrap;
+  word-wrap: normal;
+  direction: ltr;
+  -webkit-font-feature-settings: 'liga';
+  font-feature-settings: 'liga';
+  -webkit-font-smoothing: antialiased;
+}
+
+/* ── Gemini Design System Variables ───────────────────────────────────────── */
+:root {
+  /* Fonts - Gemini-style Outfit (headings) and Inter (body) */
+  --font-body: 'Inter', system-ui, -apple-system, sans-serif;
+  --font-heading: 'Outfit', system-ui, -apple-system, sans-serif;
+  --font-code: 'JetBrains Mono', 'Roboto Mono', Monaco, monospace;
+  
+  /* Gemini Brand Gradients (Cyan -> Indigo -> Purple) */
+  --gemini-gradient: linear-gradient(135deg, #0284c7 0%, #4f46e5 50%, #7c3aed 100%);
+  --gemini-glow: rgba(79, 70, 229, 0.15);
+  
+  /* Primary accents - Deep Indigo for light, vibrant violet-indigo for dark */
+  --color-primary: #4f46e5;
+  --color-primary-light: rgba(79, 70, 229, 0.08);
+  --color-link: #4f46e5;
+  
+  /* BookStack Entity Mapping */
+  --color-bookshelf: #7c3aed;
+  --color-book: #4f46e5;
+  --color-chapter: #0284c7;
+  --color-page: #06b6d4;
+  
+  /* Light Theme (Default) - Crisp, high-contrast, Gemini light mode */
+  --w-bg: #f8fafc;
+  --w-bg-surface: #ffffff;
+  --w-bg-glass: rgba(255, 255, 255, 0.85);
+  --w-bg-header: rgba(255, 255, 255, 0.90);
+  --w-bg-sidebar: rgba(248, 250, 252, 0.85);
+  --w-bg-hover: rgba(79, 70, 229, 0.06);
+  --w-bg-input: #ffffff;
+  --w-bg-card: rgba(255, 255, 255, 0.90);
+  --w-bg-card-hover: rgba(255, 255, 255, 1);
+  --w-bg-subtle: rgba(79, 70, 229, 0.03);
+  --w-border: rgba(15, 23, 42, 0.08);
+  --w-border-strong: rgba(15, 23, 42, 0.15);
+  --w-border-faint: rgba(15, 23, 42, 0.05);
+  --w-border-separator: rgba(15, 23, 42, 0.08);
+  
+  /* High contrast text definitions */
+  --w-text: #0f172a;
+  --w-text-heading: #0f172a;
+  --w-text-secondary: #1e293b;
+  --w-text-muted: #334155;
+  --w-text-subtle: #475569;
+  --w-text-dimmest: #64748b;
+  --w-text-dim: #475569;
+  
+  --w-shadow-dropdown: 0 12px 30px rgba(15, 23, 42, 0.08);
+  --w-shadow-toast: 0 8px 24px rgba(15, 23, 42, 0.08);
+  --w-shadow-sidebar: 1px 0 10px rgba(15, 23, 42, 0.02);
+  --w-grid-line: rgba(79, 70, 229, 0.04);
+  --w-grad-from: hsla(220, 50%, 96%, 0.8);
+  --w-glow-alpha: 0.04;
+  --w-scrollbar: rgba(15, 23, 42, 0.15);
+  --w-scrollbar-hover: rgba(15, 23, 42, 0.25);
+  --w-brand-silver: linear-gradient(135deg, #1e293b 0%, #4f46e5 100%);
+}
+
+/* Dark Mode Overrides - Gemini Deep Space */
+html.dark-mode {
+  --gemini-gradient: linear-gradient(135deg, #38bdf8 0%, #818cf8 50%, #c084fc 100%);
+  --gemini-glow: rgba(129, 140, 248, 0.20);
+  
+  --color-primary: #818cf8;
+  --color-primary-light: rgba(129, 140, 248, 0.12);
+  --color-link: #818cf8;
+  
+  --color-bookshelf: #c084fc;
+  --color-book: #818cf8;
+  --color-chapter: #38bdf8;
+  --color-page: #22d3ee;
+
+  --w-bg: #090b11;
+  --w-bg-surface: #121520;
+  --w-bg-glass: rgba(18, 21, 32, 0.75);
+  --w-bg-header: rgba(9, 11, 17, 0.85);
+  --w-bg-sidebar: rgba(9, 11, 17, 0.80);
+  --w-bg-hover: rgba(129, 140, 248, 0.08);
+  --w-bg-input: rgba(18, 21, 32, 0.6);
+  --w-bg-card: rgba(18, 21, 32, 0.65);
+  --w-bg-card-hover: rgba(22, 27, 41, 0.90);
+  --w-bg-subtle: rgba(129, 140, 248, 0.04);
+  --w-border: rgba(255, 255, 255, 0.07);
+  --w-border-strong: rgba(255, 255, 255, 0.15);
+  --w-border-faint: rgba(255, 255, 255, 0.04);
+  --w-border-separator: rgba(255, 255, 255, 0.06);
+  
+  --w-text: #f1f5f9;
+  --w-text-heading: #f8fafc;
+  --w-text-secondary: #e2e8f0;
+  --w-text-muted: #cbd5e1;
+  --w-text-subtle: #94a3b8;
+  --w-text-dimmest: #64748b;
+  --w-text-dim: #94a3b8;
+  
+  --w-shadow-dropdown: 0 20px 50px rgba(0, 0, 0, 0.5);
+  --w-shadow-toast: 0 10px 30px rgba(0, 0, 0, 0.4);
+  --w-shadow-sidebar: 10px 0 30px rgba(0, 0, 0, 0.4);
+  --w-grid-line: rgba(255, 255, 255, 0.015);
+  --w-grad-from: hsla(230, 45%, 12%, 0.6);
+  --w-glow-alpha: 0.12;
+  --w-scrollbar: rgba(255, 255, 255, 0.12);
+  --w-scrollbar-hover: rgba(255, 255, 255, 0.22);
+  --w-brand-silver: linear-gradient(135deg, #e2e8f0 0%, #818cf8 50%, #ffffff 100%);
+}
+
+/* ── Base & Layout Overrides ─────────────────────────────────────────────── */
+body {
+  background-color: var(--w-bg) !important;
+  color: var(--w-text) !important;
+  font-family: var(--font-body) !important;
+  transition: background-color 0.3s ease, color 0.3s ease;
+  position: relative;
+  overflow-x: hidden;
+  margin: 0;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* Dynamic background gradient + glow effects */
+html.bg-gradient body::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  z-index: -10;
+  pointer-events: none;
+  background-image: 
+    linear-gradient(var(--w-grid-line) 1px, transparent 1px), 
+    linear-gradient(90deg, var(--w-grid-line) 1px, transparent 1px);
+  background-size: 50px 50px;
+  mask-image: radial-gradient(ellipse at top, #000 40%, transparent 80%);
+  -webkit-mask-image: radial-gradient(ellipse at top, #000 40%, transparent 80%);
+}
+
+html.bg-gradient body::after {
+  content: '';
+  position: absolute;
+  width: 800px;
+  height: 600px;
+  top: -150px;
+  right: 10%;
+  z-index: -9;
+  pointer-events: none;
+  background: radial-gradient(circle, var(--gemini-glow), transparent 70%);
+  filter: blur(80px);
+}
+
+html.bg-gradient body {
+  background-image: radial-gradient(ellipse 1600px 1000px at 30% 0%, var(--w-grad-from), transparent) !important;
+  background-attachment: fixed;
+}
+
+/* ── Typografie Overrides ────────────────────────────────────────────────── */
+h1, h2, h3, h4, h5, h6, .sp-h1, .sp-h2, .sp-h3, .page-title, .details-title {
+  font-family: var(--font-heading) !important;
+  font-weight: 700 !important;
+  color: var(--w-text-heading) !important;
+  letter-spacing: -0.01em !important;
+}
+
+.page-title {
+  font-weight: 800 !important;
+  font-size: 2.2rem !important;
+  letter-spacing: -0.025em !important;
+  margin-bottom: 12px !important;
+}
+
+/* ── Fixing Faint Sidebar/Content Contrast (CRITICAL) ───────────────────── */
+/* Force sidebar items to be 100% opaque, overrides BookStack's lightDark opacity:0.6 */
+.tri-layout-left-contents > *, 
+.tri-layout-right-contents > * {
+  opacity: 1 !important;
+}
+
+/* Left Sidebar styling */
+.tri-layout-left {
+  background-color: var(--w-bg-sidebar) !important;
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border-right: 1px solid var(--w-border-faint) !important;
+}
+
+/* Sidebar Categories styling */
+.silverwiki-sidebar-categories .sp-eyebrow {
+  font-family: var(--font-heading) !important;
+  font-size: 11px !important;
+  font-weight: 700 !important;
+  letter-spacing: 0.08em !important;
+  text-transform: uppercase !important;
+  color: var(--w-text-subtle) !important;
+  padding: 0 12px !important;
+}
+
+.sidebar-category-link {
+  display: flex !important;
+  align-items: center !important;
+  padding: 10px 14px !important;
+  border-radius: 12px !important;
+  color: var(--w-text-secondary) !important;
+  font-weight: 600 !important;
+  font-size: 13.5px !important;
+  margin-bottom: 5px !important;
+  transition: all 0.2s cubic-bezier(0.2, 0, 0, 1) !important;
+  text-decoration: none !important;
+}
+
+.sidebar-category-link:hover {
+  background-color: var(--w-bg-hover) !important;
+  color: var(--color-primary) !important;
+  transform: translateX(2px);
+}
+
+.sidebar-category-link.active {
+  background-color: var(--color-primary-light) !important;
+  color: var(--color-primary) !important;
+  box-shadow: inset 3px 0 0 var(--color-primary) !important;
+}
+
+.sidebar-category-link .material-symbols-outlined {
+  margin-right: 10px;
+  font-size: 18px;
+  color: var(--w-text-subtle);
+  transition: color 0.2s ease;
+}
+
+.sidebar-category-link:hover .material-symbols-outlined,
+.sidebar-category-link.active .material-symbols-outlined {
+  color: var(--color-primary);
+}
+
+/* Right Sidebar details and action links styling */
+.tri-layout-right {
+  border-left: 1px solid var(--w-border-faint) !important;
+}
+
+.tri-layout-right-contents {
+  color: var(--w-text-subtle) !important;
+  font-size: 13.5px !important;
+}
+
+.tri-layout-right-contents .details-title {
+  color: var(--w-text-heading) !important;
+  font-size: 12px !important;
+  text-transform: uppercase !important;
+  letter-spacing: 0.08em !important;
+  font-weight: 700 !important;
+  margin-bottom: 12px !important;
+}
+
+/* Bookstack native action links list and outlines */
+.icon-item, .icon-item div, .icon-item span, a.icon-item, button.icon-item {
+  color: var(--w-text-secondary) !important;
+  font-weight: 600 !important;
+  font-size: 13.5px !important;
+  text-decoration: none !important;
+  transition: all 0.2s ease !important;
+}
+
+.icon-item:hover, .icon-item:hover div, .icon-item:hover span {
+  color: var(--color-primary) !important;
+}
+
+/* Native lists and entities in sidebars */
+.tri-layout-left-contents a, 
+.tri-layout-right-contents a {
+  color: var(--w-text-secondary) !important;
+  font-weight: 600 !important;
+  text-decoration: none !important;
+  transition: color 0.2s ease !important;
+}
+
+.tri-layout-left-contents a:hover, 
+.tri-layout-right-contents a:hover {
+  color: var(--color-primary) !important;
+}
+
+/* ── Header Styling ──────────────────────────────────────────────────────── */
+header.header {
+  background-color: var(--w-bg-header) !important;
+  backdrop-filter: blur(20px) !important;
+  -webkit-backdrop-filter: blur(20px) !important;
+  border-bottom: 1px solid var(--w-border-faint) !important;
+  height: 56px !important;
+  display: flex !important;
+  align-items: center !important;
+  padding: 0 24px !important;
+  box-shadow: 0 1px 2px rgba(9, 11, 17, 0.02) !important;
+  z-index: 100;
+}
+
+/* Logo Text with Gemini gradient */
+.silverwiki-brand-text {
+  font-family: var(--font-heading) !important;
+  font-weight: 900 !important;
+  font-size: 1.25rem !important;
+  letter-spacing: -0.03em !important;
+  background: var(--gemini-gradient) !important;
+  -webkit-background-clip: text !important;
+  background-clip: text !important;
+  color: transparent !important;
+}
+
+/* Header Links */
+header.header .header-links a {
+  color: var(--w-text-secondary) !important;
+  font-weight: 600 !important;
+  font-size: 13.5px !important;
+  border-radius: 8px !important;
+  padding: 6px 12px !important;
+  transition: all 0.2s ease !important;
+}
+
+header.header .header-links a:hover {
+  background-color: var(--w-bg-hover) !important;
+  color: var(--color-primary) !important;
+}
+
+/* Header Search override */
+header.header form#search-form input[type="text"] {
+  background: var(--w-bg-input) !important;
+  border: 1px solid var(--w-border) !important;
+  color: var(--w-text) !important;
+  border-radius: 12px !important;
+  padding: 8px 14px 8px 38px !important;
+  font-size: 13.5px !important;
+  width: 320px !important;
+  font-family: var(--font-body) !important;
+  transition: all 0.2s cubic-bezier(0.2, 0, 0, 1) !important;
+}
+
+header.header form#search-form input[type="text"]:focus {
+  border-color: var(--color-primary) !important;
+  box-shadow: 0 0 0 3px var(--color-primary-light) !important;
+}
+
+/* Avatar Ring */
+.avatar.square, .avatar {
+  border-radius: 50% !important;
+  box-shadow: 0 0 0 2px var(--w-bg-surface), 0 0 0 4px var(--color-primary-light) !important;
+}
+
+/* ── Premium Glassmorphic Cards (Gemini Look) ───────────────────────────── */
+.card, .grid-card, .list-container, .book-list-item, .chapter-list-item, .page-list-item {
+  background: var(--w-bg-card) !important;
+  backdrop-filter: blur(16px) !important;
+  -webkit-backdrop-filter: blur(16px) !important;
+  border: 1px solid var(--w-border) !important;
+  border-radius: 18px !important;
+  box-shadow: var(--w-shadow-sidebar) !important;
+  padding: 20px !important;
+  transition: all 0.3s cubic-bezier(0.2, 0, 0, 1) !important;
+}
+
+.card:hover, .grid-card:hover, .book-list-item:hover, .chapter-list-item:hover {
+  background: var(--w-bg-card-hover) !important;
+  border-color: var(--w-border-strong) !important;
+  box-shadow: var(--w-shadow-dropdown) !important;
+  transform: translateY(-2px) !important;
+}
+
+/* Content block styling (Central Wiki content area) */
+.page-content, .article-body {
+  color: var(--w-text) !important;
+  font-family: var(--font-body) !important;
+  font-size: 15px !important;
+  line-height: 1.75 !important;
+}
+
+.page-content p, .article-body p {
+  margin-bottom: 1.25em !important;
+}
+
+/* ── Tweaks Panel Overlay ────────────────────────────────────────────────── */
+.silverwiki-tweaks-btn {
+  position: fixed;
+  bottom: 24px;
+  right: 24px;
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  background: var(--w-bg-surface);
+  border: 1px solid var(--w-border-strong);
+  color: var(--w-text-secondary);
+  box-shadow: var(--w-shadow-toast);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  z-index: 9999;
+  transition: all 0.25s cubic-bezier(0.2, 0, 0, 1);
+}
+
+.silverwiki-tweaks-btn:hover {
+  transform: scale(1.08) rotate(45deg);
+  background: var(--w-bg-hover);
+  color: var(--color-primary);
+  box-shadow: var(--w-shadow-dropdown);
+}
+
+.silverwiki-tweaks-panel {
+  position: fixed;
+  bottom: 84px;
+  right: 24px;
+  width: 300px;
+  background: var(--w-bg-glass);
+  backdrop-filter: blur(24px);
+  -webkit-backdrop-filter: blur(24px);
+  border: 1px solid var(--w-border-strong);
+  border-radius: 20px;
+  box-shadow: var(--w-shadow-dropdown);
+  padding: 20px;
+  z-index: 9998;
+  display: none;
+  font-family: var(--font-body);
+  animation: slideUp 0.3s cubic-bezier(0.2, 0, 0, 1);
+}
+
+.silverwiki-tweaks-panel.open {
+  display: block;
+}
+
+.tweaks-panel-title {
+  font-family: var(--font-heading);
+  font-size: 15px;
+  font-weight: 700;
+  margin-bottom: 16px;
+  color: var(--w-text-heading);
+  border-bottom: 1px solid var(--w-border-separator);
+  padding-bottom: 10px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.tweaks-section {
+  margin-bottom: 16px;
+}
+
+.tweaks-section-title {
+  font-family: var(--font-heading);
+  font-size: 11px;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--w-text-subtle);
+  margin-bottom: 8px;
+}
+
+.tweaks-options-group {
+  display: flex;
+  gap: 6px;
+  background: var(--w-bg-subtle);
+  padding: 4px;
+  border-radius: 10px;
+}
+
+.tweaks-option-btn {
+  flex: 1;
+  border: none;
+  background: transparent;
+  color: var(--w-text-muted);
+  font-size: 12px;
+  font-weight: 600;
+  padding: 8px 0;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.tweaks-option-btn:hover {
+  color: var(--w-text);
+  background: rgba(255, 255, 255, 0.03);
+}
+
+.tweaks-option-btn.active {
+  background: var(--w-bg-surface);
+  color: var(--w-text-heading);
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
+}
+
+/* ── Buttons & Fields overrides ────────────────────────────────────────── */
+.button, button.button, input[type="button"], input[type="submit"] {
+  border-radius: 12px !important;
+  font-weight: 600 !important;
+  font-size: 13.5px !important;
+  padding: 8px 16px !important;
+  transition: all 0.2s cubic-bezier(0.2, 0, 0, 1) !important;
+}
+
+/* Primary actions use Gemini brand gradient */
+.button:not(.outline):not(.muted), 
+button.button:not(.outline):not(.muted), 
+input[type="submit"] {
+  background: var(--gemini-gradient) !important;
+  border: none !important;
+  color: #ffffff !important;
+  box-shadow: 0 2px 8px rgba(79, 70, 229, 0.15) !important;
+}
+
+.button:not(.outline):not(.muted):hover, 
+button.button:not(.outline):not(.muted):hover {
+  transform: translateY(-1px) !important;
+  box-shadow: 0 4px 12px rgba(79, 70, 229, 0.25) !important;
+  filter: brightness(1.05);
+}
+
+.button.outline, button.button.outline {
+  border: 1px solid var(--w-border-strong) !important;
+  color: var(--w-text-secondary) !important;
+  background: transparent !important;
+}
+
+.button.outline:hover {
+  background: var(--w-bg-hover) !important;
+  color: var(--color-primary) !important;
+}
+
+/* Inputs styling */
+input[type="text"], input[type="email"], input[type="password"], textarea, select {
+  background: var(--w-bg-input) !important;
+  border: 1px solid var(--w-border) !important;
+  color: var(--w-text) !important;
+  border-radius: 12px !important;
+  font-size: 14px !important;
+  transition: all 0.2s cubic-bezier(0.2, 0, 0, 1) !important;
+}
+
+input[type="text"]:focus, textarea:focus, select:focus {
+  border-color: var(--color-primary) !important;
+  box-shadow: 0 0 0 3px var(--color-primary-light) !important;
+}

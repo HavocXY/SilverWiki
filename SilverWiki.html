@@ -1,0 +1,236 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>SilverWiki</title>
+  <link rel="stylesheet" href="colors_and_type.css" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;600;700;800&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+    html { background: var(--w-bg); }
+    body { overflow-x: hidden; -webkit-font-smoothing: antialiased; }
+
+    /* ── Theme tokens ─────────────────────────────────────────────── */
+    :root, [data-theme="dark"] {
+      --sp-font-sans-app: 'Roboto', system-ui, -apple-system, sans-serif;
+      --w-bg: #0f172a;
+      --w-bg-surface: #1e293b;
+      --w-bg-glass: rgba(30,41,59,.7);
+      --w-bg-header: rgba(15,23,42,.8);
+      --w-bg-sidebar: rgba(15,23,42,.85);
+      --w-bg-hover: rgba(255,255,255,.06);
+      --w-bg-input: rgba(15,23,42,.6);
+      --w-bg-card: rgba(30,41,59,.6);
+      --w-bg-card-hover: rgba(30,41,59,.85);
+      --w-bg-subtle: rgba(255,255,255,.04);
+      --w-bg-tag-auto: rgba(249,115,22,.04);
+      --w-border: rgba(255,255,255,.08);
+      --w-border-strong: rgba(255,255,255,.12);
+      --w-border-faint: rgba(255,255,255,.06);
+      --w-border-separator: rgba(255,255,255,.05);
+      --w-text: #ffffff;
+      --w-text-heading: #e2e8f0;
+      --w-text-secondary: #e2e8f0;
+      --w-text-muted: #94a3b8;
+      --w-text-subtle: #64748b;
+      --w-text-dimmest: #475569;
+      --w-text-dim: #334155;
+      --w-chip-bg: rgba(255,255,255,.05);
+      --w-chip-border: rgba(255,255,255,.1);
+      --w-chip-text: #cbd5e1;
+      --w-shadow-dropdown: 0 20px 50px rgba(0,0,0,.5);
+      --w-shadow-toast: 0 10px 30px rgba(0,0,0,.4);
+      --w-shadow-sidebar: 10px 0 30px rgba(0,0,0,.5);
+      --w-grid-line: rgba(255,255,255,.03);
+      --w-grad-from: hsla(225,39%,22%,.5);
+      --w-glow-alpha: .18;
+      --w-scrollbar: rgba(255,255,255,.1);
+      --w-scrollbar-hover: rgba(255,255,255,.18);
+      --w-brand-silver: linear-gradient(90deg, #e2e8f0, #f8fafc);
+      --w-avatar-ring: none;
+    }
+
+    [data-theme="light"] {
+      --w-bg: #f1f5f9;
+      --w-bg-surface: #ffffff;
+      --w-bg-glass: rgba(255,255,255,.82);
+      --w-bg-header: rgba(241,245,249,.95);
+      --w-bg-sidebar: rgba(255,255,255,.95);
+      --w-bg-hover: rgba(0,0,0,.05);
+      --w-bg-input: #ffffff;
+      --w-bg-card: rgba(255,255,255,.8);
+      --w-bg-card-hover: rgba(255,255,255,1);
+      --w-bg-subtle: rgba(0,0,0,.04);
+      --w-bg-tag-auto: rgba(249,115,22,.08);
+      --w-border: rgba(0,0,0,.1);
+      --w-border-strong: rgba(0,0,0,.15);
+      --w-border-faint: rgba(0,0,0,.07);
+      --w-border-separator: rgba(0,0,0,.08);
+      --w-text: #0f172a;
+      --w-text-heading: #0f172a;
+      --w-text-secondary: #1e293b;
+      --w-text-muted: #475569;
+      --w-text-subtle: #64748b;
+      --w-text-dimmest: #94a3b8;
+      --w-text-dim: #64748b;
+      --w-chip-bg: rgba(0,0,0,.05);
+      --w-chip-border: rgba(0,0,0,.12);
+      --w-chip-text: #334155;
+      --w-shadow-dropdown: 0 20px 50px rgba(0,0,0,.12);
+      --w-shadow-toast: 0 10px 30px rgba(0,0,0,.12);
+      --w-shadow-sidebar: 10px 0 30px rgba(0,0,0,.06);
+      --w-grid-line: rgba(0,0,0,.05);
+      --w-grad-from: hsla(220,40%,92%,.7);
+      --w-glow-alpha: .08;
+      --w-scrollbar: rgba(0,0,0,.12);
+      --w-scrollbar-hover: rgba(0,0,0,.2);
+      --w-brand-silver: linear-gradient(90deg, #1e293b, #0f172a);
+      --w-avatar-ring: 0 0 0 2px var(--w-bg-surface);
+    }
+
+    /* Scrollbar */
+    ::-webkit-scrollbar { width: 6px; height: 6px; }
+    ::-webkit-scrollbar-track { background: transparent; }
+    ::-webkit-scrollbar-thumb { background: var(--w-scrollbar); border-radius: 3px; }
+    ::-webkit-scrollbar-thumb:hover { background: var(--w-scrollbar-hover); }
+
+    /* Animations */
+    @keyframes wikiDropIn {
+      from { opacity: 0; transform: translateY(-6px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    @keyframes wikiSlideUp {
+      from { opacity: 0; transform: translate(-50%, 12px); }
+      to { opacity: 1; transform: translate(-50%, 0); }
+    }
+    @keyframes wikiTagPop {
+      from { opacity: 0; transform: scale(0.85); }
+      to { opacity: 1; transform: scale(1); }
+    }
+    @keyframes spin {
+      to { transform: rotate(360deg); }
+    }
+
+    /* Responsive */
+    @media (max-width: 900px) {
+      .wiki-sidebar {
+        position: fixed !important;
+        left: 0; top: 56px; bottom: 0;
+        box-shadow: 10px 0 30px rgba(0,0,0,.5);
+      }
+      .sidebar-overlay { display: block !important; top: 56px !important; }
+      .topbar-search { display: none !important; }
+    }
+    @media (min-width: 901px) {
+      .topbar-search { display: block; }
+    }
+    @media (max-width: 600px) {
+      .btn-label { display: none; }
+      .action-label { display: none; }
+    }
+
+    /* Theme transition — register custom properties so var() transitions work */
+    @property --w-bg { syntax: '<color>'; inherits: true; initial-value: #0f172a; }
+    @property --w-bg-header { syntax: '<color>'; inherits: true; initial-value: rgba(15,23,42,.8); }
+    @property --w-bg-sidebar { syntax: '<color>'; inherits: true; initial-value: rgba(15,23,42,.85); }
+    @property --w-bg-card { syntax: '<color>'; inherits: true; initial-value: rgba(30,41,59,.6); }
+    @property --w-bg-card-hover { syntax: '<color>'; inherits: true; initial-value: rgba(30,41,59,.85); }
+    @property --w-bg-input { syntax: '<color>'; inherits: true; initial-value: rgba(15,23,42,.6); }
+    @property --w-bg-glass { syntax: '<color>'; inherits: true; initial-value: rgba(30,41,59,.7); }
+    @property --w-bg-subtle { syntax: '<color>'; inherits: true; initial-value: rgba(255,255,255,.04); }
+    @property --w-bg-hover { syntax: '<color>'; inherits: true; initial-value: rgba(255,255,255,.06); }
+    @property --w-text { syntax: '<color>'; inherits: true; initial-value: #ffffff; }
+    @property --w-text-heading { syntax: '<color>'; inherits: true; initial-value: #e2e8f0; }
+    @property --w-text-secondary { syntax: '<color>'; inherits: true; initial-value: #e2e8f0; }
+    @property --w-text-muted { syntax: '<color>'; inherits: true; initial-value: #94a3b8; }
+    @property --w-text-subtle { syntax: '<color>'; inherits: true; initial-value: #64748b; }
+    @property --w-border { syntax: '<color>'; inherits: true; initial-value: rgba(255,255,255,.08); }
+    @property --w-chip-bg { syntax: '<color>'; inherits: true; initial-value: rgba(255,255,255,.05); }
+    @property --w-chip-border { syntax: '<color>'; inherits: true; initial-value: rgba(255,255,255,.1); }
+    @property --w-chip-text { syntax: '<color>'; inherits: true; initial-value: #cbd5e1; }
+
+    :root {
+      transition:
+        --w-bg .3s ease, --w-bg-header .3s ease, --w-bg-sidebar .3s ease,
+        --w-bg-card .3s ease, --w-bg-card-hover .3s ease, --w-bg-input .3s ease,
+        --w-bg-glass .3s ease, --w-bg-subtle .3s ease, --w-bg-hover .3s ease,
+        --w-text .3s ease, --w-text-heading .3s ease, --w-text-secondary .3s ease,
+        --w-text-muted .3s ease, --w-text-subtle .3s ease,
+        --w-border .3s ease, --w-chip-bg .3s ease, --w-chip-border .3s ease, --w-chip-text .3s ease;
+    }
+
+    /* Input placeholder */
+    [data-theme="dark"] input::placeholder, [data-theme="dark"] textarea::placeholder { color: #475569; }
+    [data-theme="light"] input::placeholder, [data-theme="light"] textarea::placeholder { color: #94a3b8; }
+
+    /* Focus visible */
+    button:focus-visible, input:focus-visible, textarea:focus-visible {
+      outline: none;
+      box-shadow: 0 0 0 2px rgba(249,115,22,.4);
+    }
+
+    /* Table styling in articles */
+    .article-body table { font-family: var(--sp-font-sans-app); }
+    .article-body strong { color: var(--w-text); }
+  </style>
+
+  <script src="https://unpkg.com/react@18.3.1/umd/react.development.js" integrity="sha384-hD6/rw4ppMLGNu3tX5cjIb+uRZ7UkRJ6BPkLpg4hAu/6onKUg4lLsHAs9EBPT82L" crossorigin="anonymous"></script>
+  <script src="https://unpkg.com/react-dom@18.3.1/umd/react-dom.development.js" integrity="sha384-u6aeetuaXnQ38mYT8rp6sbXaQe3NL9t+IBXmnYxwkUI2Hw4bsp2Wvmx4yRQF1uAm" crossorigin="anonymous"></script>
+  <script src="https://unpkg.com/@babel/standalone@7.29.0/babel.min.js" integrity="sha384-m08KidiNqLdpJqLq95G/LEi8Qvjl/xUYll3QILypMoQ65QorJ9Lvtp2RXYGBFj1y" crossorigin="anonymous"></script>
+</head>
+<body>
+  <div id="root"></div>
+
+  <script>
+    const TWEAK_DEFAULTS = /*EDITMODE-BEGIN*/{
+      "density": "normal",
+      "layout": "grid",
+      "bgStyle": "gradient",
+      "theme": "dark"
+    }/*EDITMODE-END*/;
+  </script>
+
+  <script type="text/babel" src="tweaks-panel.jsx"></script>
+  <script type="text/babel" src="wiki-atoms.jsx"></script>
+  <script type="text/babel" src="wiki-data.jsx"></script>
+  <script type="text/babel" src="wiki-sidebar.jsx"></script>
+  <script type="text/babel" src="wiki-search.jsx"></script>
+  <script type="text/babel" src="wiki-article.jsx"></script>
+  <script type="text/babel" src="wiki-editor.jsx"></script>
+  <script type="text/babel" src="wiki-app.jsx"></script>
+
+  <script type="text/babel">
+    const { useTweaks, TweaksPanel, TweakSection, TweakRadio, TweakSelect } = window;
+
+    const Root = () => {
+      const [tweaks, setTweak] = useTweaks(TWEAK_DEFAULTS);
+      return (
+        <>
+          <App tweaks={tweaks} setTweak={setTweak} />
+          <TweaksPanel title="SilverWiki Tweaks">
+            <TweakSection title="Darstellung">
+              <TweakRadio label="Modus" value={tweaks.theme}
+                options={[{value: 'dark', label: 'Dunkel'}, {value: 'light', label: 'Hell'}]}
+                onChange={v => setTweak('theme', v)} />
+              <TweakRadio label="Dichte" value={tweaks.density}
+                options={[{value: 'normal', label: 'Normal'}, {value: 'dense', label: 'Kompakt'}]}
+                onChange={v => setTweak('density', v)} />
+              <TweakRadio label="Layout" value={tweaks.layout}
+                options={[{value: 'grid', label: 'Karten'}, {value: 'list', label: 'Liste'}]}
+                onChange={v => setTweak('layout', v)} />
+              <TweakSelect label="Hintergrund" value={tweaks.bgStyle}
+                options={[{value: 'gradient', label: 'Gradient + Grid'}, {value: 'flat', label: 'Flat'}]}
+                onChange={v => setTweak('bgStyle', v)} />
+            </TweakSection>
+          </TweaksPanel>
+        </>
+      );
+    };
+
+    ReactDOM.createRoot(document.getElementById('root')).render(<Root />);
+  </script>
+</body>
+</html>

@@ -1,0 +1,249 @@
+/*
+ * ============================================================================
+ * SteelPilot — Colors & Type
+ * ============================================================================
+ * Faithful port of css/steelpilot-design-tokens.css + Website tailwind palette.
+ * Keep --sp-* as source of truth; semantic aliases at the bottom.
+ * ============================================================================
+ */
+
+@import url('./fonts/fonts.css');
+@import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200');
+
+.material-symbols-outlined {
+  font-family: 'Material Symbols Outlined';
+  font-weight: normal;
+  font-style: normal;
+  font-size: 24px;
+  line-height: 1;
+  letter-spacing: normal;
+  text-transform: none;
+  display: inline-block;
+  white-space: nowrap;
+  word-wrap: normal;
+  direction: ltr;
+  -webkit-font-feature-settings: 'liga';
+  font-feature-settings: 'liga';
+  -webkit-font-smoothing: antialiased;
+}
+
+:root {
+  /* ------------------------------------------------------------------------
+   *  COLORS — Surfaces (App modules — dark slate)
+   * --------------------------------------------------------------------- */
+  --sp-bg-app:       #0f172a; /* slate-900 — page background */
+  --sp-bg-surface:   #1e293b; /* slate-800 — cards, sidebar */
+  --sp-bg-elevated:  rgba(30, 41, 59, 0.85);
+  --sp-bg-input:     rgba(15, 23, 42, 0.60);
+  --sp-bg-hover:     rgba(255, 255, 255, 0.06);
+  --sp-bg-active:    rgba(99, 102, 241, 0.15);
+
+  /* Website surface (near-black) */
+  --sp-web-bg:       #0B0C0F;
+  --sp-web-bg-deep:  #050608;
+
+  /* ------------------------------------------------------------------------
+   *  COLORS — Brand
+   * --------------------------------------------------------------------- */
+  --sp-primary:       #6366f1; /* indigo-500 — app primary */
+  --sp-primary-hover: #4f46e5; /* indigo-600 */
+  --sp-primary-muted: rgba(99, 102, 241, 0.15);
+  --sp-primary-glow:  rgba(99, 102, 241, 0.30);
+
+  --sp-accent:        #38bdf8; /* sky-400 — logo gradient end / website brand */
+  --sp-accent-hover:  #0ea5e9;
+
+  /* Website hero gradient (cyan → blue) */
+  --sp-web-grad-from: #06b6d4;
+  --sp-web-grad-to:   #2563eb;
+
+  /* ------------------------------------------------------------------------
+   *  COLORS — Module accents (one hue per product module)
+   * --------------------------------------------------------------------- */
+  --sp-mod-cut:    #22d3ee; /* cyan-400  — Stangenoptimierung */
+  --sp-mod-plan:   #f472b6; /* pink-400  — Monteurplanung     */
+  --sp-mod-time:   #4ade80; /* green-400 — Zeiterfassung      */
+  --sp-mod-sam:    #fbbf24; /* amber-400 — Statiknachweis     */
+  --sp-mod-nest:   #a78bfa; /* violet-400 — 2D-Blechnesting   */
+  --sp-mod-hub:    #60a5fa; /* blue-400  — Hub                */
+
+  /* ------------------------------------------------------------------------
+   *  COLORS — Semantic
+   * --------------------------------------------------------------------- */
+  --sp-success:       #10b981;
+  --sp-success-muted: rgba(16, 185, 129, 0.15);
+  --sp-warning:       #f59e0b;
+  --sp-warning-muted: rgba(245, 158, 11, 0.15);
+  --sp-danger:        #ef4444;
+  --sp-danger-muted:  rgba(239, 68, 68, 0.15);
+
+  /* ------------------------------------------------------------------------
+   *  COLORS — Text
+   * --------------------------------------------------------------------- */
+  --sp-text-primary:   #ffffff;
+  --sp-text-secondary: #e2e8f0; /* slate-200 */
+  --sp-text-muted:     #94a3b8; /* slate-400 */
+  --sp-text-subtle:    rgba(255, 255, 255, 0.35);
+
+  /* ------------------------------------------------------------------------
+   *  COLORS — Borders / Glass
+   * --------------------------------------------------------------------- */
+  --sp-border:        rgba(255, 255, 255, 0.08);
+  --sp-border-strong: rgba(255, 255, 255, 0.18);
+  --sp-border-focus:  var(--sp-primary);
+
+  --sp-glass-bg:      rgba(30, 41, 59, 0.70);
+  --sp-glass-border:  rgba(255, 255, 255, 0.12);
+  --sp-glass-blur:    16px;
+
+  /* ------------------------------------------------------------------------
+   *  TYPOGRAPHY — Families
+   *  Rule: App modules use Plus Jakarta Sans; the marketing website uses
+   *  Inter. Mono (code, technical values) uses JetBrains Mono in both.
+   * --------------------------------------------------------------------- */
+  --sp-font-sans-app: 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif;
+  --sp-font-sans-web: 'Inter', system-ui, -apple-system, sans-serif;
+  --sp-font-sans:     var(--sp-font-sans-app); /* default — apps */
+  --sp-font-mono:     'JetBrains Mono', 'Roboto Mono', 'Courier New', monospace;
+
+  /* Type scale */
+  --sp-text-xs:   0.75rem;   /* 12px */
+  --sp-text-sm:   0.875rem;  /* 14px */
+  --sp-text-base: 1rem;      /* 16px */
+  --sp-text-lg:   1.125rem;  /* 18px */
+  --sp-text-xl:   1.25rem;   /* 20px */
+  --sp-text-2xl:  1.5rem;    /* 24px */
+  --sp-text-3xl:  1.875rem;  /* 30px */
+  --sp-text-5xl:  3rem;      /* 48px */
+  --sp-text-7xl:  4.5rem;    /* 72px — hero */
+
+  /* ------------------------------------------------------------------------
+   *  SPACING — 4px base grid
+   * --------------------------------------------------------------------- */
+  --sp-space-1:  4px;
+  --sp-space-2:  8px;
+  --sp-space-3:  12px;
+  --sp-space-4:  16px;
+  --sp-space-5:  20px;
+  --sp-space-6:  24px;
+  --sp-space-8:  32px;
+  --sp-space-10: 40px;
+  --sp-space-12: 48px;
+
+  /* ------------------------------------------------------------------------
+   *  RADII
+   * --------------------------------------------------------------------- */
+  --sp-radius-xs:   4px;
+  --sp-radius-sm:   6px;
+  --sp-radius-md:   10px;
+  --sp-radius-lg:   16px;
+  --sp-radius-xl:   20px;
+  --sp-radius-2xl:  24px; /* bento + module cards on the website */
+  --sp-radius-full: 9999px;
+
+  /* ------------------------------------------------------------------------
+   *  SHADOWS
+   * --------------------------------------------------------------------- */
+  --sp-shadow-sm:   0 1px 3px rgba(0,0,0,.30);
+  --sp-shadow-md:   0 4px 12px rgba(0,0,0,.30);
+  --sp-shadow-lg:   0 10px 30px rgba(0,0,0,.40);
+  --sp-shadow-xl:   0 20px 50px rgba(0,0,0,.50);
+  --sp-shadow-glow: 0 0 20px var(--sp-primary-glow);
+
+  /* ------------------------------------------------------------------------
+   *  MOTION
+   * --------------------------------------------------------------------- */
+  --sp-duration-fast:   150ms;
+  --sp-duration-normal: 250ms;
+  --sp-duration-slow:   400ms;
+  --sp-easing-default:  cubic-bezier(0.2, 0, 0, 1);
+  --sp-easing-spring:   cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* =============================================================================
+ *  SEMANTIC type styles — short aliases for common roles.
+ *  Use these on elements directly OR apply the variables inline.
+ * =========================================================================== */
+
+html, body { font-family: var(--sp-font-sans); color: var(--sp-text-primary); }
+
+.sp-display {
+  font-family: var(--sp-font-sans);
+  font-size: clamp(2.25rem, 4vw + 1rem, var(--sp-text-7xl));
+  font-weight: 700;
+  letter-spacing: -0.03em;
+  line-height: 1.05;
+}
+.sp-h1 { font-size: var(--sp-text-5xl); font-weight: 700; letter-spacing: -0.02em; line-height: 1.1; }
+.sp-h2 { font-size: var(--sp-text-3xl); font-weight: 700; letter-spacing: -0.015em; line-height: 1.2; }
+.sp-h3 { font-size: var(--sp-text-2xl); font-weight: 700; letter-spacing: -0.01em; }
+.sp-h4 { font-size: var(--sp-text-xl);  font-weight: 700; }
+.sp-p  { font-size: var(--sp-text-base); line-height: 1.6; color: var(--sp-text-secondary); }
+.sp-p-muted { font-size: var(--sp-text-sm); line-height: 1.6; color: var(--sp-text-muted); }
+
+.sp-eyebrow {
+  font-family: var(--sp-font-mono);
+  font-size: var(--sp-text-xs);
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.18em;
+  color: var(--sp-text-muted);
+}
+.sp-code, .sp-mono {
+  font-family: var(--sp-font-mono);
+  font-size: var(--sp-text-sm);
+}
+
+/* -----------------------------------------------------------------------------
+ *  BRAND WORDMARK
+ *  Convention: "SteelPilot" in a blue→cyan gradient + ".module" in white
+ *  (inside apps) or the sub-lockup used on the marketing navbar.
+ * ---------------------------------------------------------------------------*/
+.sp-brand {
+  font-family: var(--sp-font-sans);
+  font-weight: 700;
+  letter-spacing: -0.02em;
+}
+.sp-brand-main {
+  background: linear-gradient(90deg, #aecbfa 0%, #d1e4ff 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  font-weight: 800;
+}
+.sp-brand-sub { color: var(--sp-text-primary); font-weight: 400; opacity: 0.95; }
+.sp-brand-edition {
+  display: block;
+  font-size: 10px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.3em;
+  opacity: 0.4;
+  margin-top: 2px;
+}
+
+/* -----------------------------------------------------------------------------
+ *  LEGACY ALIASES — mirror design-tokens.css compatibility block so any file
+ *  copied straight from the repo keeps working.
+ * ---------------------------------------------------------------------------*/
+:root {
+  --primary:        var(--sp-primary);
+  --primary-hover:  var(--sp-primary-hover);
+  --primary-glow:   var(--sp-primary-glow);
+  --accent-primary: var(--sp-primary);
+
+  --bg-page:        var(--sp-bg-app);
+  --bg-deep:        var(--sp-bg-app);
+  --bg-sidebar:     var(--sp-bg-app);
+  --bg-card:        var(--sp-bg-elevated);
+  --bg-input:       var(--sp-bg-input);
+
+  --border-color:   var(--sp-border);
+  --text-main:      var(--sp-text-primary);
+  --text-secondary: var(--sp-text-secondary);
+  --text-muted:     var(--sp-text-muted);
+
+  --glass-bg:       var(--sp-glass-bg);
+  --glass-border:   var(--sp-glass-border);
+}
