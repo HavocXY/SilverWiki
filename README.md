@@ -52,8 +52,11 @@ Der Container lädt alle Abhängigkeiten herunter, führt die Datenbank-Migratio
 
 ### 3. Wiki aufrufen
 Öffne [http://localhost:8080](http://localhost:8080) in deinem Browser.
-* **Standard-Admin-Login:** `admin@admin.com`
-* **Passwort:** `password`
+
+> [!TIP]
+> **Standard-Admin-Zugangsdaten für die lokale Entwicklung:**
+> * **E-Mail-Adresse:** `admin@admin.com`
+> * **Passwort:** `password`
 
 ---
 
