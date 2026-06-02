@@ -34,3 +34,9 @@ Da in modernen Unternehmen oft Mitarbeiter verschiedener Nationalitäten arbeite
 ### 4. draw.io Premium Themes & Vorlagen
 BookStack hat draw.io nativ für Ablaufdiagramme integriert.
 * **Erweiterung:** Bereitstellung von unternehmenseigenen Farbpaletten und Shapes (z. B. im SilverWiki Design-Stil mit Indigo-Cyan-Verläufen) direkt in draw.io für konsistente Diagramme.
+
+### 5. Performance-Optimierung: WSL2 File System Overhead (Windows NTFS Volume-Mounts)
+Da sich das Projektverzeichnis standardmäßig auf einem Windows-Laufwerk (z. B. `d:\Antigravity\SilverWiki`) befindet, muss Docker über WSL2 (Windows-Subsystem für Linux) bei jedem Seitenaufruf auf die Dateien auf der Windows-Festplatte zugreifen.
+* **Das Problem:** Da PHP-Anwendungen (wie Laravel/BookStack) bei jedem Seitenaufruf Hunderte von PHP-Dateien laden, führt die Übersetzung zwischen dem Windows-Dateisystem (NTFS) und dem Linux-Dateisystem im Container zu einem spürbaren Overhead (I/O Bottleneck).
+* **Der Tipp für maximale Performance:** Falls die Anwendung in der Entwicklungsumgebung zu langsam reagiert, empfiehlt es sich, das gesamte Projektverzeichnis direkt in das native WSL2-Dateisystem zu legen (z. B. unter `\\wsl$\Ubuntu\home\<username>\SilverWiki`) und die Docker-Container von dort aus zu starten. Dies beschleunigt die Ladezeiten nochmals um den Faktor 10 bis 20, da der Windows-I/O-Overhead komplett entfällt.
+
