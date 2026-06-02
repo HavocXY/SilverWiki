@@ -61,6 +61,30 @@ Der Container lädt alle Abhängigkeiten herunter, führt die Datenbank-Migratio
 
 Da unser Custom Theme vollständig vom `bookstack/`-Verzeichnis isoliert ist, kannst du BookStack jederzeit gefahrlos auf den neuesten Stand bringen, ohne dass es zu Merge-Konflikten kommt.
 
+### Schnellbefehle (Copy & Paste)
+Führe diese Befehlssequenz im Wurzelverzeichnis des Projekts aus:
+
+```bash
+# 1. Datenbank-Backup erstellen
+docker compose exec db mysqldump -u bookstack-test -pbookstack-test bookstack-dev > backup.sql
+
+# 2. In den BookStack-Ordner wechseln, neuesten Code ziehen und zurückkehren
+cd bookstack
+git fetch && git pull
+cd ..
+
+# 3. Container neu starten (führt composer install & DB-Migrationen aus)
+docker compose down
+docker compose up -d
+
+# 4. Logs kontrollieren (um das Hochfahren zu prüfen)
+docker compose logs -f app
+```
+
+---
+
+### Ausführliche Einzelschritte:
+
 ### 1. Schritt (Empfohlen): Datenbank-Backup erstellen
 Vor jedem Update sollte die Datenbank gesichert werden. Führe dazu folgenden Befehl im Wurzelverzeichnis aus:
 
