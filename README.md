@@ -57,14 +57,43 @@ Der Container lädt alle Abhängigkeiten herunter, führt die Datenbank-Migratio
 
 ---
 
-## BookStack aktualisieren
-Da unser Code vollständig vom `bookstack/`-Verzeichnis isoliert ist, kannst du BookStack jederzeit wie folgt auf den neuesten Stand bringen:
+## BookStack aktualisieren (Schritt-für-Schritt-Anleitung)
+
+Da unser Custom Theme vollständig vom `bookstack/`-Verzeichnis isoliert ist, kannst du BookStack jederzeit gefahrlos auf den neuesten Stand bringen, ohne dass es zu Merge-Konflikten kommt.
+
+### 1. Schritt (Empfohlen): Datenbank-Backup erstellen
+Vor jedem Update sollte die Datenbank gesichert werden. Führe dazu folgenden Befehl im Wurzelverzeichnis aus:
+
+```bash
+docker compose exec db mysqldump -u bookstack-test -pbookstack-test bookstack-dev > backup.sql
+```
+*Die Datei `backup.sql` wird in deinem lokalen Projektordner erstellt und kann im Notfall wieder eingespielt werden.*
+
+### 2. Schritt: Neuesten BookStack-Code holen
+Wechsle in das `bookstack`-Verzeichnis und lade die stabilen Codeänderungen vom offiziellen `release`-Branch herunter:
 
 ```bash
 cd bookstack
 git fetch
 git pull
+cd ..
 ```
+
+### 3. Schritt: Docker-Container neu starten
+Starte die Container neu. Beim Booten des Anwendungs-Containers werden im Hintergrund automatisch die Abhängigkeiten (`composer install`) und eventuelle Datenbank-Migrationen (`php artisan migrate`) ausgeführt:
+
+```bash
+docker compose down
+docker compose up -d
+```
+
+### 4. Schritt: Logs prüfen (Optional)
+Du kannst überprüfen, ob das Update erfolgreich durchgelaufen ist und der Webserver aktiv ist:
+
+```bash
+docker compose logs -f app
+```
+*Sobald dort `Apache/2.x.x ... configured -- resuming normal operations` steht, ist deine Instanz auf dem neuesten Stand und betriebsbereit.*
 
 ---
 
