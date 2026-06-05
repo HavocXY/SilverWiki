@@ -3,7 +3,7 @@
       dir="{{ isset($locale) ? $locale->htmlDirection() : 'auto' }}"
       class="{{ setting()->getForCurrentUser('dark-mode-enabled') ? 'dark-mode ' : '' }}">
 <head>
-    <title>{{ isset($pageTitle) ? $pageTitle . ' | ' : '' }}{{ setting('app-name') }}</title>
+    <title>{{ isset($pageTitle) ? $pageTitle . ' | ' : '' }}{{ setting('app-name', 'SilverWiki') }}</title>
 
     <!-- Meta -->
     <meta charset="utf-8">
@@ -13,7 +13,7 @@
     <meta name="theme-color" content="{{(setting()->getForCurrentUser('dark-mode-enabled') ? setting('app-color-dark') : setting('app-color'))}}"/>
 
     <!-- Social Cards Meta -->
-    <meta property="og:title" content="{{ isset($pageTitle) ? $pageTitle . ' | ' : '' }}{{ setting('app-name') }}">
+    <meta property="og:title" content="{{ isset($pageTitle) ? $pageTitle . ' | ' : '' }}{{ setting('app-name', 'SilverWiki') }}">
     <meta property="og:url" content="{{ url()->current() }}">
     @stack('social-meta')
 
@@ -35,7 +35,7 @@
     <meta name="mobile-web-app-capable" content="yes">
 
     <!-- OpenSearch -->
-    <link rel="search" type="application/opensearchdescription+xml" title="{{ setting('app-name') }}" href="{{ url('/opensearch.xml') }}">
+    <link rel="search" type="application/opensearchdescription+xml" title="{{ setting('app-name', 'SilverWiki') }}" href="{{ url('/opensearch.xml') }}">
 
     <!-- Custom Styles & Head Content -->
     @include('layouts.parts.custom-styles')
@@ -47,7 +47,7 @@
     @stack('translations')
 
     <!-- Avoid Flash of Unstyled Content (FOUC) for SilverWiki settings -->
-    <script>
+    <script @if($cspNonce ?? false) nonce="{{ $cspNonce }}" @endif>
         (function() {
             var density = localStorage.getItem('silverwiki_density') || 'normal';
             document.documentElement.classList.add('density-' + density);
@@ -81,14 +81,14 @@
     </div>
 
     <!-- Tweaks Panel Button -->
-    <button class="silverwiki-tweaks-btn" aria-label="SilverWiki Darstellungseinstellungen">
+    <button class="silverwiki-tweaks-btn" aria-label="{{ setting('app-name', 'SilverWiki') }} Darstellungseinstellungen">
         <span class="material-symbols-outlined">settings</span>
     </button>
 
     <!-- Tweaks Panel Box -->
     <div class="silverwiki-tweaks-panel">
         <div class="tweaks-panel-title">
-            <span>SilverWiki Tweaks</span>
+            <span>{{ setting('app-name', 'SilverWiki') }} Tweaks</span>
             <span class="material-symbols-outlined">tune</span>
         </div>
         
@@ -128,6 +128,6 @@
     @include('layouts.parts.base-body-end')
     
     <!-- SilverWiki custom logic -->
-    <script src="/theme/silverwiki/js/silverwiki.js" defer></script>
+    <script src="/theme/silverwiki/js/silverwiki.js" @if($cspNonce ?? false) nonce="{{ $cspNonce }}" @endif defer></script>
 </body>
 </html>

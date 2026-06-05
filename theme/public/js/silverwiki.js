@@ -89,17 +89,18 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 
     // Dark/Light Theme Handler (BookStack Integration)
-    // BookStack defines if dark-mode is active by presence of class "dark-mode" on <html>
-    const isDarkModeActive = htmlEl.classList.contains('dark-mode');
-    updateActiveButton('theme', isDarkModeActive ? 'dark' : 'light');
+    // BookStack defines if dark-mode is active by presence of class "dark-mode" on <html>.
+    // We store the initial state on page load to prevent conflicts with temporary style previews
+    // (e.g. in Settings -> Customization, where BookStack toggles the class for color preview).
+    const isActualDarkOnLoad = htmlEl.classList.contains('dark-mode');
+    updateActiveButton('theme', isActualDarkOnLoad ? 'dark' : 'light');
 
     document.querySelectorAll('[data-tweak-group="theme"]').forEach(btn => {
         btn.addEventListener('click', () => {
             const val = btn.getAttribute('data-tweak-value');
-            const currentlyDark = htmlEl.classList.contains('dark-mode');
             
-            // If user clicked a state different from current, submit the BookStack dark-mode form
-            if ((val === 'dark' && !currentlyDark) || (val === 'light' && currentlyDark)) {
+            // If user clicked a state different from the saved initial state, submit the BookStack dark-mode form
+            if ((val === 'dark' && !isActualDarkOnLoad) || (val === 'light' && isActualDarkOnLoad)) {
                 const nativeForm = document.querySelector('form[action*="toggle-dark-mode"]');
                 if (nativeForm) {
                     nativeForm.submit();
@@ -135,4 +136,57 @@ document.addEventListener('DOMContentLoaded', () => {
             }
         });
     });
+
+    // ── 4. Interactive 3D Parallax Tilt Effect ──────────────────────────────
+    // Applies a dynamic tilt effect to 3D books relative to the mouse pointer.
+    const initialize3DParallax = () => {
+        // Skip on mobile/touch devices or in compact mode
+        if (window.matchMedia('(pointer: coarse)').matches || htmlEl.classList.contains('density-dense')) {
+            return;
+        }
+
+        const cards = document.querySelectorAll('.grid-card[data-entity-type="book"]');
+        cards.forEach(card => {
+            const book = card.querySelector('.book-3d');
+            if (!book) return;
+
+            card.addEventListener('mousemove', (e) => {
+                const rect = card.getBoundingClientRect();
+                const x = e.clientX - rect.left; // x position within element
+                const y = e.clientY - rect.top;  // y position within element
+                
+                const centerX = rect.width / 2;
+                const centerY = rect.height / 2;
+                
+                // Calculate percentages (-1 to 1)
+                const percentX = (x - centerX) / centerX;
+                const percentY = (y - centerY) / centerY;
+                
+                // Book baseline rotation is rotateY(-18deg) rotateX(8deg).
+                // On normal hover (without JS) it's rotateY(-36deg) rotateX(12deg).
+                // We map percentX to rotateY between -15deg (left side) and -39deg (right side).
+                const rotY = -27 + (percentX * 12); 
+                const rotX = 10 + (percentY * 8);   
+                
+                book.style.transform = `rotateY(${rotY}deg) rotateX(${rotX}deg) translateZ(15px)`;
+            });
+
+            card.addEventListener('mouseleave', () => {
+                // Restore default CSS state
+                book.style.transform = '';
+            });
+        });
+    };
+
+    // Initialize parallax
+    initialize3DParallax();
+
+    // Re-initialize parallax when density changes
+    document.querySelectorAll('[data-tweak-group="density"]').forEach(btn => {
+        btn.addEventListener('click', () => {
+            // Give class transition time to settle
+            setTimeout(initialize3DParallax, 50);
+        });
+    });
 });
+

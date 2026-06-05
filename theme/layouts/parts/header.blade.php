@@ -3,7 +3,7 @@
         <!-- SilverWiki custom brand logo/text -->
         <a href="{{ url('/') }}" class="logo flex-container-row items-center gap-xs" style="text-decoration: none;">
             <span class="material-symbols-outlined" style="color: var(--color-primary); font-size: 22px;">space_dashboard</span>
-            <span class="silverwiki-brand-text">SilverWiki</span>
+            <span class="silverwiki-brand-text">{{ setting('app-name', 'SilverWiki') }}</span>
         </a>
         
         <div class="hide-over-l py-s">

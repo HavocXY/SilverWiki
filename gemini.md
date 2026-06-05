@@ -30,6 +30,9 @@ SilverWiki/
 │   │   ├── tri.blade.php      # Drei-Spalten-Layout (Regale = Kategorien)
 │   │   └── parts/
 │   │       └── header.blade.php # Custom SilverWiki Header
+│   ├── settings/
+│   │   └── categories/
+│   │       └── customization.blade.php # Eigene Anpassungsseite (Admin App-Name Fallback)
 │   └── theme.json             # Theme-Metadaten (falls von BookStack benötigt)
 ├── docker-compose.yml         # Root Docker-Compose zur Orchestrierung beider Ordner
 ├── gemini.md                  # Dieses Dokument (Entwickler- & Agenten-Leitfaden)
