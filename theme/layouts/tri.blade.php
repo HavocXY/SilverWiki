@@ -41,7 +41,7 @@
                         <!-- SilverWiki Categories Sidebar (Shelves) -->
                         <div class="silverwiki-sidebar-categories" style="margin-bottom: 24px; padding-bottom: 16px; border-bottom: 1px solid var(--w-border-separator);">
                             <div class="sp-eyebrow" style="margin-bottom: 12px; padding: 0 12px; font-size: 10px; font-weight: 700; letter-spacing: 0.15em; text-transform: uppercase; color: var(--w-text-subtle);">
-                                Kategorien
+                                {{ trans('settings.categories') }}
                             </div>
                             @php
                                 $shelfQueries = app(\BookStack\Entities\Queries\BookshelfQueries::class);

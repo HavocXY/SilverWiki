@@ -1190,3 +1190,93 @@ html.dark-mode body:has(.breadcrumbs a.text-page) main.card::after {
   border-left-color: rgba(255,255,255,0.08);
 }
 
+
+/* ── Global Density (Compact View) Overrides ────────────────────────────── */
+
+/* 1. Card & Container Padding */
+html.density-dense .card,
+html.density-dense .grid-card,
+html.density-dense .list-container,
+html.density-dense .book-list-item,
+html.density-dense .chapter-list-item,
+html.density-dense .page-list-item {
+  padding: 12px 16px !important;
+  border-radius: 12px !important;
+}
+
+/* 2. Buttons & Inputs sizing */
+html.density-dense .button,
+html.density-dense button.button,
+html.density-dense input[type="button"],
+html.density-dense input[type="submit"] {
+  padding: 5px 12px !important;
+  font-size: 12.5px !important;
+  border-radius: 8px !important;
+}
+
+html.density-dense input[type="text"],
+html.density-dense input[type="email"],
+html.density-dense input[type="password"],
+html.density-dense textarea,
+html.density-dense select {
+  padding: 5px 10px !important;
+  font-size: 13px !important;
+  border-radius: 8px !important;
+}
+
+/* 3. Header & Header Navigation */
+html.density-dense header.header {
+  height: 48px !important;
+  gap: 16px !important;
+}
+
+html.density-dense header.header .header-links a {
+  padding: 4px 8px !important;
+  font-size: 12.5px !important;
+}
+
+/* 4. Sidebar Category & Entity Lists */
+html.density-dense .entity-list-item {
+  padding-top: 6px !important;
+  padding-bottom: 6px !important;
+  padding-left: 12px !important;
+}
+
+html.density-dense .sidebar-category-link {
+  padding-top: 4px !important;
+  padding-bottom: 4px !important;
+  margin-bottom: 2px !important;
+}
+
+html.density-dense .breadcrumbs a {
+  padding: 2px 6px !important;
+  font-size: 11px !important;
+  border-radius: 8px !important;
+}
+
+/* 5. Typography Scale & Article Spacing */
+html.density-dense h1,
+html.density-dense .sp-h1 {
+  font-size: 1.75rem !important;
+}
+
+html.density-dense h2,
+html.density-dense .sp-h2 {
+  font-size: 1.4rem !important;
+}
+
+html.density-dense h3,
+html.density-dense .sp-h3 {
+  font-size: 1.15rem !important;
+}
+
+html.density-dense .page-content,
+html.density-dense .article-body {
+  font-size: 14px !important;
+  line-height: 1.6 !important;
+}
+
+html.density-dense .page-content p,
+html.density-dense .article-body p {
+  margin-bottom: 0.85em !important;
+}

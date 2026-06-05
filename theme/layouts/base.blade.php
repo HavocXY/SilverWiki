@@ -81,41 +81,41 @@
     </div>
 
     <!-- Tweaks Panel Button -->
-    <button class="silverwiki-tweaks-btn" aria-label="{{ setting('app-name', 'SilverWiki') }} Darstellungseinstellungen">
+    <button class="silverwiki-tweaks-btn" aria-label="{{ setting('app-name', 'SilverWiki') }} {{ trans('silverwiki.aria_label_tweaks') }}">
         <span class="material-symbols-outlined">settings</span>
     </button>
 
     <!-- Tweaks Panel Box -->
     <div class="silverwiki-tweaks-panel">
         <div class="tweaks-panel-title">
-            <span>{{ setting('app-name', 'SilverWiki') }} Tweaks</span>
+            <span>{{ setting('app-name', 'SilverWiki') }} {{ trans('silverwiki.tweaks_title') }}</span>
             <span class="material-symbols-outlined">tune</span>
         </div>
         
         <!-- Theme Selection -->
         <div class="tweaks-section">
-            <div class="tweaks-section-title">Darstellung</div>
+            <div class="tweaks-section-title">{{ trans('silverwiki.tweaks_section_theme') }}</div>
             <div class="tweaks-options-group">
-                <button class="tweaks-option-btn" data-tweak-group="theme" data-tweak-value="dark">Dunkel</button>
-                <button class="tweaks-option-btn" data-tweak-group="theme" data-tweak-value="light">Hell</button>
+                <button class="tweaks-option-btn" data-tweak-group="theme" data-tweak-value="dark">{{ trans('common.dark_mode') }}</button>
+                <button class="tweaks-option-btn" data-tweak-group="theme" data-tweak-value="light">{{ trans('common.light_mode') }}</button>
             </div>
         </div>
         
         <!-- Density Selection -->
         <div class="tweaks-section">
-            <div class="tweaks-section-title">Layoutdichte</div>
+            <div class="tweaks-section-title">{{ trans('silverwiki.tweaks_section_density') }}</div>
             <div class="tweaks-options-group">
-                <button class="tweaks-option-btn" data-tweak-group="density" data-tweak-value="normal">Normal</button>
-                <button class="tweaks-option-btn" data-tweak-group="density" data-tweak-value="dense">Kompakt</button>
+                <button class="tweaks-option-btn" data-tweak-group="density" data-tweak-value="normal">{{ trans('silverwiki.tweaks_density_normal') }}</button>
+                <button class="tweaks-option-btn" data-tweak-group="density" data-tweak-value="dense">{{ trans('silverwiki.tweaks_density_dense') }}</button>
             </div>
         </div>
 
         <!-- Background Selection -->
         <div class="tweaks-section">
-            <div class="tweaks-section-title">Hintergrund</div>
+            <div class="tweaks-section-title">{{ trans('silverwiki.tweaks_section_background') }}</div>
             <div class="tweaks-options-group">
-                <button class="tweaks-option-btn" data-tweak-group="bgStyle" data-tweak-value="gradient">Gradient</button>
-                <button class="tweaks-option-btn" data-tweak-group="bgStyle" data-tweak-value="flat">Flat</button>
+                <button class="tweaks-option-btn" data-tweak-group="bgStyle" data-tweak-value="gradient">{{ trans('silverwiki.tweaks_bg_gradient') }}</button>
+                <button class="tweaks-option-btn" data-tweak-group="bgStyle" data-tweak-value="flat">{{ trans('silverwiki.tweaks_bg_flat') }}</button>
             </div>
         </div>
     </div>
