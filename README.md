@@ -1,3 +1,232 @@
+# SilverWiki — Modern Google Gemini "Neural Expressive" Overlay for BookStack
+
+SilverWiki is a state-of-the-art, self-hosted company wiki. It is built on the stable open-source software **BookStack**, but gives it a completely redesigned, premium design overlay based on the **Google Gemini "Neural Expressive"** design language (high contrast, fluid cyan-indigo-purple gradients, minimalist typography with Outfit/Inter, glassmorphism, adjustable layout density).
+
+The integration is built to be **update-safe**: the original BookStack remains untouched as a Git repository, while our theme is stored separately and mounted in via a Docker volume.
+
+---
+
+## 📸 Screenshots & Preview
+
+Here you can see the modern Google Gemini "Neural Expressive" design in action:
+
+### Main Dashboard (Wiki Home)
+![Main Dashboard](dashboard_preview.png)
+
+### Customization & Display Settings
+![Customization Settings](settings_preview.png)
+
+---
+
+## 1. 🚀 Quick Start & Installation
+
+This project includes fully automated setup scripts that handle all necessary configuration and startup steps in a single run — checking requirements, starting containers, and opening the app directly in your browser.
+
+### A. Prerequisites (Download Links)
+Make sure the following software is installed and running on your system before starting:
+1. **Docker Desktop:** [Download Docker Desktop](https://www.docker.com/products/docker-desktop/) (Required to run the container environment).
+2. **Git:** [Download Git](https://git-scm.com/downloads) (Required for cloning and updating repositories).
+
+> [!IMPORTANT]
+> **Start the Docker Daemon:** Make sure Docker Desktop is running before executing the setup script.
+>
+> **Auto-Start configured:** The containers are configured with `restart: unless-stopped` in `docker-compose.yml`. They will start automatically with the Docker service or on system restarts, as long as they haven't been manually stopped.
+
+---
+
+### B. One-Click Installation
+
+Simply run the appropriate script for your operating system from the project root directory:
+
+#### 💻 On Windows (PowerShell):
+Open a PowerShell console in the project directory and run:
+```powershell
+powershell -ExecutionPolicy Bypass -File .\setup.ps1
+```
+
+#### 🐧 On Linux / macOS / WSL (Bash):
+Open a terminal in the project directory and run:
+```bash
+chmod +x setup.sh
+./setup.sh
+```
+
+**What the script does automatically for you:**
+* Checks prerequisites (Git, Docker, and running daemon).
+* Clones the original BookStack into the `/bookstack` subdirectory (on the stable `release` branch).
+* Sets Windows-compatible line endings (LF) to prevent startup issues in Docker.
+* Creates the `.env` configuration file with pre-configured database and email settings.
+* Starts the Docker containers (with configured auto-start policy).
+* Verifies accessibility and opens SilverWiki **automatically in your default browser**.
+
+---
+
+## 2. 🔐 Admin First Login
+
+After the script has completed successfully, the application will open in your browser. You can log in with the following default credentials:
+
+* **URL:** [http://localhost:8080/login](http://localhost:8080/login)
+* **Email:** `admin@admin.com`
+* **Password:** `password`
+
+> [!WARNING]
+> **Security notice for production use:**
+> Change these default credentials immediately after your first login, in the admin area under **User Profile** -> **Edit Profile**. Also generate a secure application key via `php artisan key:generate` for production use.
+
+---
+
+## 3. 🛠️ Manual Installation (Step by Step)
+
+If you prefer to set things up manually, follow these steps in order:
+
+#### Step A: Clone the repository
+```bash
+git clone https://github.com/HavocXY/SilverWiki.git
+cd SilverWiki
+```
+
+#### Step B: Clone BookStack & select branch
+Clone BookStack into the `bookstack/` subdirectory and check out the stable `release` branch:
+```bash
+git clone https://github.com/BookStackApp/BookStack.git bookstack
+cd bookstack
+git checkout release
+cd ..
+```
+
+#### Step C: Set Windows Git attributes (Important on Windows)
+Create the file `bookstack/.git/info/attributes` and add the following line to prevent shell script startup errors in Docker:
+```text
+*.sh text eol=lf
+```
+
+#### Step D: Create configuration (`.env`)
+Create a `.env` file in the `bookstack/` folder with the following settings:
+```env
+APP_KEY=base64:c2lsdmVyd2lraWRldmtleTEyMzQ1Njc4OTAxMjM0NTY=
+DB_CONNECTION=mysql
+DB_HOST=db
+DB_PORT=3306
+DB_DATABASE=bookstack-dev
+DB_USERNAME=bookstack-test
+DB_PASSWORD=bookstack-test
+APP_THEME=silverwiki
+APP_URL=http://localhost:8080
+MAIL_DRIVER=smtp
+MAIL_HOST=mailhog
+MAIL_PORT=1025
+MAIL_FROM_NAME="SilverWiki Mailer"
+MAIL_FROM=silverwiki@local.dev
+APP_LANG=de
+```
+
+#### Step E: Start containers
+```bash
+docker compose up -d
+```
+The application is now available at [http://localhost:8080](http://localhost:8080) and the email monitor (Mailhog) at [http://localhost:8025](http://localhost:8025).
+
+---
+
+## 4. ⚙️ Operations & Docker Commands
+
+* **Stop containers:**
+  ```bash
+  docker compose down
+  ```
+* **Start containers:**
+  ```bash
+  docker compose up -d
+  ```
+* **Rebuild containers:**
+  ```bash
+  docker compose up -d --build
+  ```
+* **View live logs:**
+  ```bash
+  docker compose logs -f app
+  ```
+* **Backup database:**
+  ```bash
+  docker compose exec db mysqldump -u bookstack-test -pbookstack-test bookstack-dev > backup.sql
+  ```
+* **Restore database:**
+  ```bash
+  docker compose exec -T db mysql -u bookstack-test -pbookstack-test bookstack-dev < backup.sql
+  ```
+
+---
+
+## 🐳 Conflict Avoidance & Container Isolation
+
+To ensure SilverWiki runs smoothly and does not collide with other Docker containers or system paths, the following mechanisms are in place:
+
+### 1. Resolving Port Conflicts (Flexible Ports)
+If port `8080` (web application) or `8025` (Mailhog) is already in use by another service on your machine, Docker will block the start.
+* **The solution:** Create a file named `.env` in the **project root directory** (`SilverWiki/`, not in the `bookstack/` subdirectory) and define alternative ports:
+  ```env
+  DEV_PORT=9090
+  DEV_MAIL_PORT=9025
+  ```
+  Docker Compose reads these values automatically. The application will then start at `http://localhost:9090` and BookStack will automatically adapt its internal redirects to the new URL.
+
+### 2. Network Isolation (No Database Conflicts)
+* **How it works:** Docker Compose creates an isolated virtual network on startup (e.g. `silverwiki_default`).
+* All containers within this project (`app`, `db`, `mailhog`) communicate over this internal network and address each other by their service names (e.g. `db` as hostname).
+* **Advantage:** Even if another MySQL server or Docker project is already running on your host machine, the databases will never interfere with each other. The SilverWiki app container will always connect exclusively to its own SilverWiki database.
+
+### 3. Absolute Portability (Relative Paths)
+* **How it works:** All volume mounts in `docker-compose.yml` use relative paths (e.g. `./theme` and `./bookstack`).
+* **Advantage:** The physical path on your hard drive doesn't matter at all. You can freely move, rename, or copy the `SilverWiki/` folder — Docker Compose always resolves paths relative to the location of `docker-compose.yml`, so the links always point to the correct folders.
+
+---
+
+## 5. 📋 Features
+
+* **Gemini "Neural Expressive" UI/UX:** Minimalist, high-fidelity interface using the **Outfit** font (headings) and **Inter** (body), fluid brand gradients, and optimal contrast for excellent readability throughout the UI.
+* **Non-destructive Architecture:** BookStack can be updated at any time via `git pull` without overwriting our custom theme or causing merge conflicts.
+* **Built-in Tweaks Panel:** Users can configure layout density (Normal vs. Compact), view type (Cards vs. List), and background style (Gradient + Grid vs. Flat) directly in the UI. Settings are persisted in LocalStorage.
+* **Shelves as Categories:** BookStack's shelves are displayed seamlessly as main categories in the left sidebar.
+
+---
+
+## 📂 Directory Structure
+
+- `/bookstack` — The original BookStack subdirectory (Git clone).
+- `/theme` — Our custom theme (Blade templates, CSS, JS).
+- `/docker-compose.yml` — The central Docker configuration in the root directory.
+
+---
+
+## 🔄 Updating BookStack (Step-by-Step Guide)
+
+Since our custom theme is completely isolated from the `bookstack/` directory, you can safely update BookStack to the latest version at any time without causing merge conflicts.
+
+### Quick Commands (Copy & Paste)
+```bash
+# 1. Create a database backup
+docker compose exec db mysqldump -u bookstack-test -pbookstack-test bookstack-dev > backup.sql
+
+# 2. Enter the BookStack folder, pull the latest code, and return
+cd bookstack
+git fetch && git pull
+cd ..
+
+# 3. Restart containers (runs composer install & DB migrations)
+docker compose down
+docker compose up -d
+
+# 4. Check logs
+docker compose logs -f app
+```
+
+---
+
+## 💻 Developer Information
+For detailed information on architecture, design decisions, and guidelines for AI agents, see [gemini.md](gemini.md).
+
+---
+
 # SilverWiki — Modernes Google Gemini „Neural Expressive“ Overlay für BookStack
 
 SilverWiki ist ein hochmodernes, firmeninternes Wiki für den Eigengebrauch. Es basiert auf der stabilen Open-Source-Software **BookStack**, verpasst dieser jedoch ein komplett neues, premium-gestaltetes Design-Overlay basierend auf der **Google Gemini „Neural Expressive“**-Designsprache (hoher Kontrast, flüssige Cyan-Indigo-Lila Verläufe, minimalistische Typografie mit Outfit/Inter, Glassmorphismus, einstellbare Layoutdichte).
