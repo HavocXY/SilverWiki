@@ -31,25 +31,3 @@ Da sich das Projektverzeichnis standardmäßig auf einem Windows-Laufwerk (z. B.
 * **Das Problem:** Da PHP-Anwendungen (wie Laravel/BookStack) bei jedem Seitenaufruf Hunderte von PHP-Dateien laden, führt die Übersetzung zwischen dem Windows-Dateisystem (NTFS) und dem Linux-Dateisystem im Container zu einem spürbaren Overhead (I/O Bottleneck).
 * **Der Tipp für maximale Performance:** Falls die Anwendung in der Entwicklungsumgebung zu langsam reagiert, empfiehlt es sich, das gesamte Projektverzeichnis direkt in das native WSL2-Dateisystem zu legen (z. B. unter `\\wsl$\Ubuntu\home\<username>\SilverWiki`) und die Docker-Container von dort aus zu starten. Dies beschleunigt die Ladezeiten nochmals um den Faktor 10 bis 20, da der Windows-I/O-Overhead komplett entfällt.
 
----
-
-## ➔ Abgeschlossene Optimierungen / Bugfixes
-
-### 1. Überlappende Regallinien ("Striche") in der Bücher-Übersicht entfernt
-* **Problem:** In der Bücher-/Regal-Übersicht (`.silverwiki-shelf-bookshelf-grid`) wurden skeuomorphische Regalböden (die horizontalen Linien) über absolute Positionen im CSS gerendert. Dies führte bei dynamischen Höhen der Buch-Karten (z. B. durch längere Titel oder Beschreibungstexte) und verschiedenen Bildschirmgrößen dazu, dass die Linien unschön mitten durch die Karten schnitten.
-* **Lösung:** Pseudo-Elemente `::before` und `::after` auf dem Grid gelöscht und den vertikalen Abstand (`row-gap`) auf `24px` verringert, was zu einem sauberen, modernen und robusten Layout führt.
-* **Datum:** Juni 2026
-
-### 2. Interaktive, sortierbare & filterbare Datentabellen
-* **Beschreibung:** Dynamische Integration der `simple-datatables`-Bibliothek. Tabellen in Wiki-Seiten (sofern sie Kopfzeilen besitzen) werden automatisch interaktiv mit clientseitiger Sortierung, Suche und Pagination. Sehr kleine Tabellen (unter 5 Datenzeilen) werden dezent sortierbar gehalten, während größere Tabellen vollwertige Controls erhalten. Ein premium CSS-Design im Gemini-Farbschema wurde für Light/Dark/Dense-Modi integriert.
-* **Datum:** Juni 2026
-
-### 3. Custom Page Templates (Vorlagen-Bibliothek)
-* **Beschreibung:** Bereitstellung von vier professionell gestalteten Vorlagen (Arbeitsanweisungen/SOPs, Normen-Zusammenfassungen, Materialdatenblätter und Onboarding-Steckbriefe) in einem eigenen Buch "SilverWiki Vorlagen". Importiert über ein custom Artisan Command (`silverwiki:import-templates`) und nahtlos integriert.
-* **Datum:** Juni 2026
-
-### 4. draw.io Premium Themes & Custom Farbpalette
-* **Beschreibung:** Dynamische Konfiguration des integrierten draw.io-Diagrammeditors via Frontend-Event (`editor-drawio::configure`). Eigene Gemini-Farbpalette (Cyan-Indigo-Lila-Coral) und Standard-Schriftarten (Outfit/Inter) wurden im Editor hinterlegt.
-* **Datum:** Juni 2026
-
-
