@@ -10,6 +10,10 @@ use BookStack\Users\Models\User;
 
 /**
  * Custom Artisan Command to import SilverWiki templates.
+ * Why this command exists: Seeding templates directly via migrations or SQL files is prone to
+ * database state issues. This Laravel Artisan command leverages BookStack's native Repositories
+ * to ensure that templates are created following all system rules, permission hierarchies,
+ * and page revision tracking.
  */
 class ImportTemplatesCommand extends Command
 {
@@ -18,6 +22,10 @@ class ImportTemplatesCommand extends Command
 
     public function handle(BookRepo $bookRepo, PageRepo $pageRepo): int
     {
+        // Why we authenticate: When running Artisan commands in the CLI context, Laravel
+        // resolves the session user to 'Guest' by default. BookStack blocks page/book creation
+        // for guests. By querying the first user with an 'admin' system role and programmatically
+        // logging them in, we bypass this authorization restriction safely during CLI execution.
         $this->info('Anmeldung als System-Administrator...');
         $adminUser = User::query()
             ->whereHas('roles', function ($query) {
@@ -32,7 +40,10 @@ class ImportTemplatesCommand extends Command
         auth()->login($adminUser);
         $this->info("Erfolgreich angemeldet als: {$adminUser->name} ({$adminUser->email})");
 
-        // Find or create the Templates Book
+        // Find or create the Templates Book.
+        // Why we group them: Placing all templates inside a dedicated Book makes it easier
+        // for users to browse, edit, and discover them. Since the pages are marked as templates,
+        // BookStack handles them as reusable layouts without polluting the normal search indexing.
         $bookName = 'SilverWiki Vorlagen';
         $bookDescription = 'Bibliothek für SilverWiki Vorlagen (Arbeitsanweisungen, Normen, Steckbriefe etc.)';
         
@@ -47,6 +58,7 @@ class ImportTemplatesCommand extends Command
         }
 
         // Templates configuration mapping
+        // We read local static HTML files from the theme folder and seed them as pages.
         $templatesDir = theme_path('templates');
         if (!is_dir($templatesDir)) {
             $this->error("Vorlagen-Verzeichnis nicht gefunden unter: {$templatesDir}");
@@ -70,13 +82,18 @@ class ImportTemplatesCommand extends Command
             $htmlContent = file_get_contents($filePath);
             $this->info("Importiere Vorlage: {$title}...");
 
-            // Check if page template already exists in this book
+            // Why we query the database before creation: To ensure idempotency. If this
+            // command is run multiple times (e.g. during deployment, Docker container recreation,
+            // or updates), we update the existing template page in-place instead of creating duplicates.
             $page = Page::query()
                 ->where('book_id', '=', $book->id)
                 ->where('name', '=', $title)
                 ->where('template', '=', true)
                 ->first();
 
+            // Why we set 'editor' => 'wysiwyg': BookStack needs to know that these pages
+            // contain structured HTML. If we set it to 'markdown', BookStack's editor might
+            // strip out our grid CSS classes, styling definitions, and layout containers.
             if ($page) {
                 $this->info("Vorlage '{$title}' existiert bereits. Aktualisiere Inhalt...");
                 $pageRepo->setContentFromInput($page, [
@@ -85,12 +102,14 @@ class ImportTemplatesCommand extends Command
                     'editor' => 'wysiwyg',
                 ]);
             } else {
+                // If it doesn't exist, we create a draft and publish it directly.
+                // This ensures all database hooks (like activity logging and revisions) run normally.
                 $this->info("Erstelle neue Vorlage '{$title}'...");
                 $draft = $pageRepo->getNewDraftPage($book);
                 $pageRepo->publishDraft($draft, [
                     'name' => $title,
                     'html' => $htmlContent,
-                    'template' => 'true',
+                    'template' => 'true', // Marks this page as an editor template in BookStack
                     'editor' => 'wysiwyg',
                 ]);
             }
@@ -102,4 +121,5 @@ class ImportTemplatesCommand extends Command
 }
 
 // Register command with BookStack Theme Service
+// This exposes our custom Artisan console command to Laravel's CLI kernel automatically.
 Theme::registerCommand(new ImportTemplatesCommand());

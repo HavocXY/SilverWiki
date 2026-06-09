@@ -190,27 +190,37 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 
     // ── 5. Interactive Sortable Tables (Option 2) ───────────────────────────
+    // Why we do this: BookStack does not support sorting or searching on native tables.
+    // By dynamically transforming standard HTML tables using the 'simple-datatables' library,
+    // we make wiki documents highly interactive and data-friendly, especially for spreadsheet-like logs,
+    // without having to edit BookStack core code or PHP controllers (preserving update-safety).
     const initializeInteractiveTables = () => {
-        // Find tables in the page content
+        // We look for page content container to prevent transforming structural layouts,
+        // sidebars, settings grids, or user profile statistics tables.
         const pageContent = document.querySelector('.page-content');
         if (!pageContent) return;
 
-        // Target tables that have table headers (th) - layout tables usually don't have th
+        // Why we filter tables: We must skip tables being actively edited (inside WYSIWYG
+        // editor container) to avoid breaking the editor's visual state or triggering draft
+        // saving issues. We also skip tables without headers ('th') because layout-only grids
+        // do not need sorting/searching controls.
         const tables = Array.from(pageContent.querySelectorAll('table')).filter(table => {
-            // Skip tables that are already processed or are inside editor/nested elements
             if (table.closest('.wysiwyg-editor, .editor-container, [component="page-editor"]')) return false;
-            // Also support tables with explicit sorted or interactive class regardless of th
+            // Allow manual opt-in using classes
             if (table.classList.contains('sorted') || table.classList.contains('interactive')) return true;
             return table.querySelector('th') !== null;
         });
 
         if (tables.length === 0) return;
 
-        // Ensure we only load the script and CSS once
+        // Ensure we load the external JS/CSS only once per page view, even if multiple
+        // tables exist on the same page.
         if (window.SimpleDataTableInitialized) return;
         window.SimpleDataTableInitialized = true;
 
         // 1. Inject Simple-DataTables CSS
+        // Loaded dynamically from CDN to keep initial page load speed fast for pages
+        // that do not contain any tables.
         const cssLink = document.createElement('link');
         cssLink.rel = 'stylesheet';
         cssLink.type = 'text/css';
@@ -225,18 +235,19 @@ document.addEventListener('DOMContentLoaded', () => {
         jsScript.onload = () => {
             tables.forEach(table => {
                 try {
-                    // Count data rows in tbody (or tr in general if tbody not set yet)
+                    // Why we count data rows: Small tables (e.g. 4 rows or fewer) look cluttered
+                    // and lose valuable screen space if search boxes and pagination elements are added.
+                    // For these small tables, we keep columns sortable but hide controls.
                     const hasTbody = table.querySelector('tbody');
                     const rows = hasTbody ? table.querySelectorAll('tbody tr') : Array.from(table.querySelectorAll('tr')).slice(1);
                     const rowCount = rows.length;
-                    
-                    // If table has very few rows (e.g. less than 4), disable search/pagination
-                    // so it doesn't clutter the layout with controls.
                     const isCompactTable = rowCount <= 4;
 
-                    // Ensure the table has a proper thead/tbody structure
+                    // Why we normalize table structures: 'simple-datatables' requires strict
+                    // HTML structure (thead for headers, tbody for body rows). BookStack's editor
+                    // or markdown parser occasionally renders headers inside tr directly without thead.
+                    // We normalize the table DOM structure programmatically before initialization.
                     const hasThead = table.querySelector('thead');
-                    
                     if (!hasThead) {
                         const firstRow = table.querySelector('tr');
                         if (firstRow) {
@@ -253,6 +264,7 @@ document.addEventListener('DOMContentLoaded', () => {
                         table.appendChild(tbody);
                     }
 
+                    // Resolve DataTable class which changed names/namespaces in newer simple-datatables versions
                     const dtClass = (window.simpleDatatables && window.simpleDatatables.DataTable) || window.DataTable;
                     if (dtClass) {
                         new dtClass(table, {
@@ -282,10 +294,16 @@ document.addEventListener('DOMContentLoaded', () => {
     initializeInteractiveTables();
 
     // ── 6. Draw.io Custom Theme & Palette Integration (Option 4) ─────────────
+    // Why we do this: BookStack uses an embedded draw.io editor for diagrams, running in an iframe.
+    // BookStack provides a global event 'editor-drawio::configure' allowing parent themes to
+    // customize color presets, fonts, and settings before draw.io loads.
+    // By listening to this event, we override the default editor choices to matching Gemini colors
+    // and fonts, guaranteeing corporate brand consistency for all diagrams without editing core files.
     window.addEventListener('editor-drawio::configure', event => {
         const config = event.detail.config;
         
         // Define Gemini-themed brand color palette (Cyan, Indigo, Lila, Coral)
+        // These match the fluid gradient styling declared in silverwiki.css
         const geminiPalette = [
             '#1ba1e3', '#06b6d4', '#22d3ee', '#38bdf8', // Cyan shades
             '#5b53e8', '#818cf8', '#4f46e5', '#3f51b5', // Indigo shades
@@ -295,12 +313,14 @@ document.addEventListener('DOMContentLoaded', () => {
             '#5f6368', '#3c4043', '#202124', '#000000'  // Dark neutrals
         ];
         
-        // Inject color configuration
+        // Inject color configuration into the draw.io config schema
         config.defaultColors = geminiPalette;
         config.presetColors = ['#1ba1e3', '#5b53e8', '#a445ed', '#f46075'];
         config.customPresetColors = ['#22d3ee', '#818cf8', '#c084fc', '#fb7185'];
         
-        // Configure default fonts to match SilverWiki typography
+        // Prepend Outfit (headings) and Inter (body) to the default fonts dropdown.
+        // This allows users to directly select SilverWiki fonts when writing diagram text labels,
+        // matching the host page typography.
         if (config.defaultFonts) {
             config.defaultFonts = ['Outfit', 'Inter'].concat(config.defaultFonts);
         } else {
