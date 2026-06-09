@@ -33,7 +33,18 @@ SilverWiki/
 │   ├── settings/
 │   │   └── categories/
 │   │       └── customization.blade.php # Eigene Anpassungsseite (Admin App-Name Fallback)
+│   ├── templates/             # Custom Seitenvorlagen (SOP, Normen, Steckbriefe etc.)
+│   │   ├── arbeitsanweisung.html
+│   │   ├── materialdatenblatt.html
+│   │   ├── normen_zusammenfassung.html
+│   │   └── onboarding_steckbrief.html
+│   ├── functions.php          # PHP Theme-Hooks & custom Artisan Import Command
 │   └── theme.json             # Theme-Metadaten (falls von BookStack benötigt)
+├── tests/                     # Integrations- & E2E-Tests (Playwright)
+│   ├── package.json
+│   ├── take-screenshot.js
+│   ├── test-tables.js
+│   └── test-templates-drawio.js
 ├── docker-compose.yml         # Root Docker-Compose zur Orchestrierung beider Ordner
 ├── gemini.md                  # Dieses Dokument (Entwickler- & Agenten-Leitfaden)
 └── README.md                  # Allgemeine Projekt-Beschreibung
@@ -68,4 +79,14 @@ BookStack läuft als PHP/Laravel-App mit einer MySQL-Datenbank. Zur lokalen Ausf
   **Wichtig für Windows-Entwickler:** Da die Docker-Shell-Skripte LF-Zeilenenden benötigen, wurde die lokale Datei `bookstack/.git/info/attributes` angelegt, die `*.sh text eol=lf` erzwingt. Diese Datei ist im Git-Klon unsichtbar und update-sicher, verhindert jedoch Startprobleme in Docker auf Windows.
 * **Regel 4: Tweaks-Panel:**
   Das Tweaks-Panel wird über `silverwiki.js` gesteuert und fügt dem `<html>`-Element CSS-Klassen wie `.density-dense` oder `.bg-flat` hinzu. Alle Styling-Regeln dafür müssen in `silverwiki.css` definiert sein.
+* **Regel 5: Seitenvorlagen (Custom Templates):**
+  Firmen-Vorlagen werden als HTML-Dateien unter `theme/templates/` abgelegt. Um sie in die Datenbank einzupflegen oder zu aktualisieren, muss das Custom Artisan Command im App-Container ausgeführt werden:
+  ```bash
+  docker compose exec app php artisan silverwiki:import-templates
+  ```
+  Dieses Command legt ein Buch namens "SilverWiki Vorlagen" an und importiert die HTML-Vorlagen update-sicher als wiederverwendbare Seitenvorlagen.
+* **Regel 6: Interaktive & sortierbare Tabellen:**
+  Datentabellen auf Wiki-Seiten (mit `th` Kopfzeilen) werden automatisch via `simple-datatables` interaktiv gestaltet (Sortierung, Filterung, Suche, Pagination). Das Script wird in `theme/public/js/silverwiki.js` geladen. Bei kleinen Tabellen (weniger als 5 Datenzeilen) werden Suche und Pagination automatisch ausgeblendet, um das Layout sauber zu halten.
+* **Regel 7: draw.io Custom Theme Integration:**
+  Die Farbpalette und Schriftarten des integrierten draw.io-Editors werden über ein `editor-drawio::configure` Event in `silverwiki.js` angepasst. Dadurch stehen den Nutzern direkt die SilverWiki Gemini-Brandingfarben (Cyan, Indigo, Lila, Coral) und Fonts (Outfit, Inter) standardmäßig zur Verfügung.
 

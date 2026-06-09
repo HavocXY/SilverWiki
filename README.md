@@ -187,13 +187,17 @@ If port `8080` (web application) or `8025` (Mailhog) is already in use by anothe
 * **Non-destructive Architecture:** BookStack can be updated at any time via `git pull` without overwriting our custom theme or causing merge conflicts.
 * **Built-in Tweaks Panel:** Users can configure layout density (Normal vs. Compact), view type (Cards vs. List), and background style (Gradient + Grid vs. Flat) directly in the UI. Settings are persisted in LocalStorage.
 * **Shelves as Categories:** BookStack's shelves are displayed seamlessly as main categories in the left sidebar.
+* **Interactive Data Tables:** Standard tables on wiki pages (with headers) are automatically upgraded with search filtering, client-side sorting, and pagination using a custom Gemini dark/light style.
+* **Corporate Templates Library:** Includes standard operating procedures (SOPs), norms, data sheets, and onboarding templates. Seeded via a single Artisan console command.
+* **draw.io Custom Theme:** Integrates custom Gemini color palettes and Outfit/Inter fonts automatically inside the built-in draw.io editor.
 
 ---
 
 ## 📂 Directory Structure
 
 - `/bookstack` — The original BookStack subdirectory (Git clone).
-- `/theme` — Our custom theme (Blade templates, CSS, JS).
+- `/theme` — Our custom theme (Blade templates, CSS, JS, HTML templates, and functions.php).
+- `/tests` — E2E and integration tests written in Playwright.
 - `/docker-compose.yml` — The central Docker configuration in the root directory.
 
 ---
@@ -416,13 +420,17 @@ Falls Port `8080` (Webanwendung) oder `8025` (Mailhog) bereits von einem anderen
 * **Zerstörungsfreie Architektur:** BookStack kann jederzeit via `git pull` aktualisiert werden, ohne dass unser Custom-Theme überschrieben wird oder Merge-Konflikte auftreten.
 * **Integriertes Tweaks-Panel:** Nutzer können Layout-Dichte (Normal vs. Kompakt), Layout-Typ (Karten vs. Liste) und Hintergrund-Stile (Gradient + Grid vs. Flat) direkt im UI einstellen. Die Einstellungen werden im LocalStorage persistiert.
 * **Regale als Kategorien:** BookStacks Regale (Shelves) werden nahtlos als Hauptkategorien in der linken Sidebar dargestellt.
+* **Interaktive & sortierbare Tabellen:** Tabellen auf Wiki-Seiten (sofern sie Kopfzeilen besitzen) erhalten vollautomatisch clientseitige Sortierung, Suche und Pagination basierend auf `simple-datatables`, wunderschön gestaltet im SilverWiki CSS-Design.
+* **Seitenvorlagen-Bibliothek:** Vordefinierte Vorlagen für Arbeitsanweisungen (SOPs), Normen-Zusammenfassungen, Materialdatenblätter und Onboarding-Steckbriefe in einem eigenen Buch. Importiert und aktualisiert über ein custom Artisan Command.
+* **draw.io Custom Theme Integration:** Integration von unternehmenseigenen Gemini-Farbpaletten und Standard-Schriftarten (Outfit, Inter) direkt im integrierten draw.io-Editor.
 
 ---
 
 ## 📂 Verzeichnisstruktur
 
 - `/bookstack` — Das originale BookStack-Subverzeichnis (Git-Klon).
-- `/theme` — Unser Custom Theme (Blade-Templates, CSS, JS).
+- `/theme` — Unser Custom Theme (Blade-Templates, CSS, JS, Seitenvorlagen und functions.php).
+- `/tests` — E2E- und Integrationstests (Playwright).
 - `/docker-compose.yml` — Die zentrale Docker-Konfiguration im Wurzelverzeichnis.
 
 ---
