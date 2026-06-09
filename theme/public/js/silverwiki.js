@@ -280,5 +280,34 @@ document.addEventListener('DOMContentLoaded', () => {
     };
 
     initializeInteractiveTables();
+
+    // ── 6. Draw.io Custom Theme & Palette Integration (Option 4) ─────────────
+    window.addEventListener('editor-drawio::configure', event => {
+        const config = event.detail.config;
+        
+        // Define Gemini-themed brand color palette (Cyan, Indigo, Lila, Coral)
+        const geminiPalette = [
+            '#1ba1e3', '#06b6d4', '#22d3ee', '#38bdf8', // Cyan shades
+            '#5b53e8', '#818cf8', '#4f46e5', '#3f51b5', // Indigo shades
+            '#a445ed', '#c084fc', '#d946ef', '#7b1fa2', // Lila/Purple shades
+            '#f46075', '#fb7185', '#f43f5e', '#e11d48', // Coral/Rose shades
+            '#ffffff', '#f1f3f4', '#dadce0', '#9aa0a6', // Light neutrals
+            '#5f6368', '#3c4043', '#202124', '#000000'  // Dark neutrals
+        ];
+        
+        // Inject color configuration
+        config.defaultColors = geminiPalette;
+        config.presetColors = ['#1ba1e3', '#5b53e8', '#a445ed', '#f46075'];
+        config.customPresetColors = ['#22d3ee', '#818cf8', '#c084fc', '#fb7185'];
+        
+        // Configure default fonts to match SilverWiki typography
+        if (config.defaultFonts) {
+            config.defaultFonts = ['Outfit', 'Inter'].concat(config.defaultFonts);
+        } else {
+            config.defaultFonts = ['Outfit', 'Inter', 'Helvetica', 'Arial'];
+        }
+        
+        console.log('✅ Draw.io editor configured with SilverWiki Gemini palette & typography.');
+    });
 });
 
