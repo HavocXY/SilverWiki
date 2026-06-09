@@ -1280,3 +1280,166 @@ html.density-dense .page-content p,
 html.density-dense .article-body p {
   margin-bottom: 0.85em !important;
 }
+
+/* ── Interactive Sortable Tables (Simple-DataTables) Styling ──────────────── */
+.datatable-wrapper {
+  width: 100% !important;
+  margin: 24px 0 !important;
+  font-family: var(--font-body) !important;
+}
+
+.datatable-top, .datatable-bottom {
+  display: flex !important;
+  justify-content: space-between !important;
+  align-items: center !important;
+  padding: 12px 0 !important;
+  flex-wrap: wrap !important;
+  gap: 12px !important;
+  color: var(--w-text-secondary) !important;
+  font-size: 13.5px !important;
+}
+
+.datatable-search {
+  float: none !important;
+}
+
+.datatable-input, .datatable-selector {
+  background: var(--w-bg-input) !important;
+  border: 1px solid var(--w-border) !important;
+  color: var(--w-text) !important;
+  border-radius: 10px !important;
+  padding: 6px 12px !important;
+  font-family: var(--font-body) !important;
+  font-size: 13.5px !important;
+  transition: all 0.2s cubic-bezier(0.2, 0, 0, 1) !important;
+  outline: none !important;
+}
+
+.datatable-input:focus, .datatable-selector:focus {
+  border-color: var(--color-primary) !important;
+  box-shadow: 0 0 0 3px var(--color-primary-light), 0 4px 15px -5px var(--gemini-glow) !important;
+}
+
+.datatable-container {
+  border: 1px solid var(--w-border) !important;
+  border-radius: 12px !important;
+  overflow-x: auto !important;
+  background: var(--w-bg-surface) !important;
+  box-shadow: 0 4px 15px -5px rgba(0, 0, 0, 0.02) !important;
+}
+
+.datatable-table {
+  border-collapse: collapse !important;
+  width: 100% !important;
+  margin: 0 !important;
+}
+
+.datatable-table th {
+  font-family: var(--font-heading) !important;
+  font-weight: 600 !important;
+  color: var(--w-text-heading) !important;
+  background-color: var(--w-bg-subtle) !important;
+  border-bottom: 2px solid var(--w-border-strong) !important;
+  padding: 12px 16px !important;
+  text-align: left !important;
+}
+
+.datatable-table th a.datatable-sorter {
+  color: var(--w-text-heading) !important;
+  text-decoration: none !important;
+  display: block !important;
+  position: relative !important;
+  padding-right: 20px !important;
+}
+
+/* Customize simple-datatables built-in sorter arrows to match our style */
+.datatable-sorter::before, .datatable-sorter::after {
+  border-color: var(--w-text-dimmest) transparent !important;
+}
+
+.datatable-table td {
+  padding: 12px 16px !important;
+  border-bottom: 1px solid var(--w-border-separator) !important;
+  color: var(--w-text-secondary) !important;
+}
+
+.datatable-table tbody tr:hover {
+  background-color: var(--w-bg-hover) !important;
+  transition: background-color 0.15s ease !important;
+}
+
+/* Pagination styled as rounded pill buttons with Gemini gradient active state */
+.datatable-pagination ul {
+  display: flex !important;
+  list-style: none !important;
+  padding-left: 0 !important;
+  margin: 0 !important;
+  gap: 4px !important;
+}
+
+.datatable-pagination li {
+  margin: 0 !important;
+}
+
+.datatable-pagination a {
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  min-width: 32px !important;
+  height: 32px !important;
+  padding: 0 8px !important;
+  border-radius: 8px !important;
+  color: var(--w-text-secondary) !important;
+  text-decoration: none !important;
+  transition: all 0.2s ease !important;
+  font-weight: 500 !important;
+  font-size: 13px !important;
+}
+
+.datatable-pagination a:hover {
+  background-color: var(--w-bg-hover) !important;
+  color: var(--color-primary) !important;
+}
+
+.datatable-pagination li.active a {
+  background: var(--gemini-gradient) !important;
+  color: #ffffff !important;
+  font-weight: 600 !important;
+  box-shadow: 0 2px 6px rgba(91, 83, 232, 0.2) !important;
+}
+
+.datatable-pagination li.disabled a {
+  color: var(--w-text-dimmest) !important;
+  cursor: not-allowed !important;
+  pointer-events: none !important;
+}
+
+/* ── Density Dense Overrides for DataTables ───────────────────────────────── */
+html.density-dense .datatable-wrapper {
+  margin: 12px 0 !important;
+}
+
+html.density-dense .datatable-top, 
+html.density-dense .datatable-bottom {
+  padding: 6px 0 !important;
+  font-size: 12.5px !important;
+}
+
+html.density-dense .datatable-input, 
+html.density-dense .datatable-selector {
+  padding: 4px 8px !important;
+  font-size: 12.5px !important;
+  border-radius: 6px !important;
+}
+
+html.density-dense .datatable-table th, 
+html.density-dense .datatable-table td {
+  padding: 8px 12px !important;
+}
+
+html.density-dense .datatable-pagination a {
+  min-width: 28px !important;
+  height: 28px !important;
+  font-size: 12px !important;
+  border-radius: 6px !important;
+}

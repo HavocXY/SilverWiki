@@ -7,3 +7,6 @@
 .DS_Store
 *.code-workspace
 thumbs.db
+
+# Test dependencies
+/tests/node_modules/

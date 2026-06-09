@@ -188,5 +188,97 @@ document.addEventListener('DOMContentLoaded', () => {
             setTimeout(initialize3DParallax, 50);
         });
     });
+
+    // ── 5. Interactive Sortable Tables (Option 2) ───────────────────────────
+    const initializeInteractiveTables = () => {
+        // Find tables in the page content
+        const pageContent = document.querySelector('.page-content');
+        if (!pageContent) return;
+
+        // Target tables that have table headers (th) - layout tables usually don't have th
+        const tables = Array.from(pageContent.querySelectorAll('table')).filter(table => {
+            // Skip tables that are already processed or are inside editor/nested elements
+            if (table.closest('.wysiwyg-editor, .editor-container, [component="page-editor"]')) return false;
+            // Also support tables with explicit sorted or interactive class regardless of th
+            if (table.classList.contains('sorted') || table.classList.contains('interactive')) return true;
+            return table.querySelector('th') !== null;
+        });
+
+        if (tables.length === 0) return;
+
+        // Ensure we only load the script and CSS once
+        if (window.SimpleDataTableInitialized) return;
+        window.SimpleDataTableInitialized = true;
+
+        // 1. Inject Simple-DataTables CSS
+        const cssLink = document.createElement('link');
+        cssLink.rel = 'stylesheet';
+        cssLink.type = 'text/css';
+        cssLink.href = 'https://cdn.jsdelivr.net/npm/simple-datatables@latest/dist/style.css';
+        document.head.appendChild(cssLink);
+
+        // 2. Inject Simple-DataTables JS
+        const jsScript = document.createElement('script');
+        jsScript.src = 'https://cdn.jsdelivr.net/npm/simple-datatables@latest/dist/umd/simple-datatables.js';
+        jsScript.defer = true;
+        
+        jsScript.onload = () => {
+            tables.forEach(table => {
+                try {
+                    // Count data rows in tbody (or tr in general if tbody not set yet)
+                    const hasTbody = table.querySelector('tbody');
+                    const rows = hasTbody ? table.querySelectorAll('tbody tr') : Array.from(table.querySelectorAll('tr')).slice(1);
+                    const rowCount = rows.length;
+                    
+                    // If table has very few rows (e.g. less than 4), disable search/pagination
+                    // so it doesn't clutter the layout with controls.
+                    const isCompactTable = rowCount <= 4;
+
+                    // Ensure the table has a proper thead/tbody structure
+                    const hasThead = table.querySelector('thead');
+                    
+                    if (!hasThead) {
+                        const firstRow = table.querySelector('tr');
+                        if (firstRow) {
+                            const thead = document.createElement('thead');
+                            thead.appendChild(firstRow);
+                            table.insertBefore(thead, table.firstChild);
+                        }
+                    }
+
+                    if (!hasTbody) {
+                        const tbody = document.createElement('tbody');
+                        const remainingRows = Array.from(table.querySelectorAll('tr')).filter(row => !row.closest('thead'));
+                        remainingRows.forEach(row => tbody.appendChild(row));
+                        table.appendChild(tbody);
+                    }
+
+                    const dtClass = (window.simpleDatatables && window.simpleDatatables.DataTable) || window.DataTable;
+                    if (dtClass) {
+                        new dtClass(table, {
+                            searchable: !isCompactTable,
+                            paging: !isCompactTable,
+                            fixedHeight: false,
+                            perPage: 10,
+                            labels: {
+                                placeholder: "Suchen...",
+                                perPage: "Einträge pro Seite",
+                                noRows: "Keine Einträge gefunden",
+                                info: "Zeige {start} bis {end} von {rows} Einträgen",
+                            }
+                        });
+                    } else {
+                        console.error('DataTable class could not be resolved from loaded simple-datatables script.');
+                    }
+                } catch (err) {
+                    console.error('Error initializing simple-datatables on table:', err);
+                }
+            });
+        };
+        
+        document.body.appendChild(jsScript);
+    };
+
+    initializeInteractiveTables();
 });
 
