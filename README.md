@@ -4,6 +4,14 @@ SilverWiki is a state-of-the-art, self-hosted company wiki. It is built on the s
 
 The integration is built to be **update-safe**: the original BookStack remains untouched as a Git repository, while our theme is stored separately and mounted in via a Docker volume.
 
+### 🌟 Added Value: Custom Features on top of BookStack
+* **Gemini "Neural Expressive" Redesign:** Seamless integration of Outfit (headings) and Inter (body) fonts, custom color palettes, and deep dark/light mode optimization.
+* **Interactive Tweaks Panel:** A custom settings panel allowing real-time layout density selection (Normal vs. Compact), background customization (Fluid Gradient vs. Flat Neutral), and card layout modes.
+* **Smart Data Tables:** Every standard table on wiki pages automatically becomes an interactive, sortable, and searchable datatable. It dynamically hides controls for small lists to keep clean layouts.
+* **Corporate templates:** Built-in template manager supporting SOPs (Standard Operating Procedures), norms summaries, specifications sheets, and onboarding checklists.
+* **draw.io Custom Theme:** Custom color palette and Outfit/Inter fonts automatically integrated directly into the embedded draw.io editor.
+* **Shelves as Sidebar Categories:** Custom navigation that elevates BookStack shelves to top-level sidebar items.
+
 ---
 
 ## 📸 Screenshots & Preview
@@ -236,6 +244,14 @@ For detailed information on architecture, design decisions, and guidelines for A
 SilverWiki ist ein hochmodernes, firmeninternes Wiki für den Eigengebrauch. Es basiert auf der stabilen Open-Source-Software **BookStack**, verpasst dieser jedoch ein komplett neues, premium-gestaltetes Design-Overlay basierend auf der **Google Gemini „Neural Expressive“**-Designsprache (hoher Kontrast, flüssige Cyan-Indigo-Lila Verläufe, minimalistische Typografie mit Outfit/Inter, Glassmorphismus, einstellbare Layoutdichte).
 
 Die Integration ist **update-sicher** aufgebaut: Das originale BookStack bleibt als Git-Repository unberührt, während unser Theme getrennt gelagert und per Docker-Volume hineingemountet wird.
+
+### 🌟 Mehrwert: Custom-Features zusätzlich zu BookStack
+* **Gemini „Neural Expressive“ Redesign:** Outfit-Schriftart für markante Überschriften, Inter-Schriftart für Fließtexte und flüssige Cyan-Indigo-Lila-Verläufe in Dark- und Light-Modes.
+* **Interaktives Tweaks-Panel:** Live-Anpassung der Layout-Dichte (Normal vs. Kompakt), des Hintergrunds (Farbverlauf + Gitter vs. Neutral-Flach) und der Buch-Darstellung, direkt im UI steuerbar und im LocalStorage gesichert.
+* **Smarte Datentabellen:** Automatische Verwandlung von Standardtabellen in durchsuchbare, sortierbare und paginierte Datentabellen mit dynamischer Skalierung für kleine und große Tabellen.
+* **Seitenvorlagen-Bibliothek:** Vorgefertigte Layouts für Arbeitsanweisungen (SOPs), Normen-Zusammenfassungen, Materialdatenblätter und Onboarding-Steckbriefe.
+* **draw.io-Branding:** Unternehmenseigene Gemini-Farbpalette und Schriftarten (Outfit, Inter) direkt in den integrierten draw.io-Diagrammeditor eingespeist.
+* **Regale als Seitenkategorien:** Integration der Buchregale als Hauptkategorien in der linken Sidebar für eine intuitivere Navigation.
 
 ---
 
