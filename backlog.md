@@ -40,3 +40,13 @@ Da sich das Projektverzeichnis standardmäßig auf einem Windows-Laufwerk (z. B.
 * **Das Problem:** Da PHP-Anwendungen (wie Laravel/BookStack) bei jedem Seitenaufruf Hunderte von PHP-Dateien laden, führt die Übersetzung zwischen dem Windows-Dateisystem (NTFS) und dem Linux-Dateisystem im Container zu einem spürbaren Overhead (I/O Bottleneck).
 * **Der Tipp für maximale Performance:** Falls die Anwendung in der Entwicklungsumgebung zu langsam reagiert, empfiehlt es sich, das gesamte Projektverzeichnis direkt in das native WSL2-Dateisystem zu legen (z. B. unter `\\wsl$\Ubuntu\home\<username>\SilverWiki`) und die Docker-Container von dort aus zu starten. Dies beschleunigt die Ladezeiten nochmals um den Faktor 10 bis 20, da der Windows-I/O-Overhead komplett entfällt.
 
+---
+
+## ➔ Abgeschlossene Optimierungen / Bugfixes
+
+### 1. Überlappende Regallinien ("Striche") in der Bücher-Übersicht entfernt
+* **Problem:** In der Bücher-/Regal-Übersicht (`.silverwiki-shelf-bookshelf-grid`) wurden skeuomorphische Regalböden (die horizontalen Linien) über absolute Positionen im CSS gerendert. Dies führte bei dynamischen Höhen der Buch-Karten (z. B. durch längere Titel oder Beschreibungstexte) und verschiedenen Bildschirmgrößen dazu, dass die Linien unschön mitten durch die Karten schnitten.
+* **Lösung:** Pseudo-Elemente `::before` und `::after` auf dem Grid gelöscht und den vertikalen Abstand (`row-gap`) auf `24px` verringert, was zu einem sauberen, modernen und robusten Layout führt.
+* **Datum:** Juni 2026
+
+

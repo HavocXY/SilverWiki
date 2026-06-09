@@ -1015,58 +1015,12 @@ html.density-dense .grid-card:hover .book-3d {
   border-radius: 24px;
   padding: 30px 20px 20px 20px !important;
   border: 1px solid var(--w-border-faint);
-  row-gap: 55px !important;
+  row-gap: 24px !important;
   position: relative;
 }
 
 html.dark-mode .silverwiki-shelf-bookshelf-grid {
   background: rgba(255, 255, 255, 0.015);
-}
-
-.silverwiki-shelf-bookshelf-grid::before {
-  content: '';
-  position: absolute;
-  left: 20px;
-  right: 20px;
-  top: 235px;
-  height: 10px;
-  background: rgba(255, 255, 255, 0.8);
-  backdrop-filter: blur(10px);
-  border: 1px solid rgba(255,255,255,0.4);
-  border-bottom: 2px solid rgba(164, 69, 237, 0.4);
-  box-shadow: 0 8px 16px rgba(0,0,0,0.05);
-  border-radius: 6px;
-  z-index: 1;
-  pointer-events: none;
-}
-
-.silverwiki-shelf-bookshelf-grid::after {
-  content: '';
-  position: absolute;
-  left: 20px;
-  right: 20px;
-  top: 520px;
-  height: 10px;
-  background: rgba(255, 255, 255, 0.8);
-  backdrop-filter: blur(10px);
-  border: 1px solid rgba(255,255,255,0.4);
-  border-bottom: 2px solid rgba(164, 69, 237, 0.4);
-  box-shadow: 0 8px 16px rgba(0,0,0,0.05);
-  border-radius: 6px;
-  z-index: 1;
-  pointer-events: none;
-  display: none;
-}
-
-.silverwiki-shelf-bookshelf-grid:has(> *:nth-child(4))::after {
-  display: block;
-}
-
-html.dark-mode .silverwiki-shelf-bookshelf-grid::before,
-html.dark-mode .silverwiki-shelf-bookshelf-grid::after {
-  background: rgba(30, 30, 32, 0.85);
-  border: 1px solid rgba(255,255,255,0.06);
-  border-bottom: 2px solid rgba(164, 69, 237, 0.6);
 }
 
 /* Book List Mini 3D Icon (for Search Lists & sidebars) */
