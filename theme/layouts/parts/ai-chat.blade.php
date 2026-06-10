@@ -14,7 +14,7 @@
                     <div class="ai-chat-settings-title">KI-Modell Verwaltung</div>
                     <label>Aktives Modell</label>
                     <select id="ollama-model-select" class="ai-chat-model-select" title="Aktives KI-Modell wechseln">
-                        <option value="{{ setting('silverwiki-llm-model', 'gemma4:e2b') }}">{{ setting('silverwiki-llm-model', 'gemma4:e2b') }}</option>
+                        <option value="{{ setting('silverwiki-llm-model', 'gemma4:e4b') }}">{{ setting('silverwiki-llm-model', 'gemma4:e4b') }}</option>
                     </select>
                     
                     <label style="margin-top: 10px;">Neues Modell laden</label>

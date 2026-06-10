@@ -335,10 +335,17 @@ document.addEventListener('DOMContentLoaded', () => {
     const chatWidget = document.getElementById('ai-chat-container');
     const chatTrigger = document.getElementById('ai-chat-trigger');
     const chatClose = document.getElementById('ai-chat-close');
+    const chatIsOpen = localStorage.getItem('silverwiki_chat_open') === 'true';
 
     if (chatWidget) {
         chatWidget.classList.add(`chat-layout-${savedChatLayout}`);
         updateActiveButton('chatLayout', savedChatLayout);
+
+        // Restore chat open state
+        if (chatIsOpen) {
+            chatWidget.style.display = 'flex';
+            if (chatTrigger) chatTrigger.style.display = 'none';
+        }
 
         // Chat Layout Tweaks
         document.querySelectorAll('[data-tweak-group="chatLayout"]').forEach(btn => {
@@ -356,6 +363,7 @@ document.addEventListener('DOMContentLoaded', () => {
             chatTrigger.addEventListener('click', () => {
                 chatWidget.style.display = 'flex';
                 chatTrigger.style.display = 'none';
+                localStorage.setItem('silverwiki_chat_open', 'true');
                 document.getElementById('ai-chat-input').focus();
             });
         }
@@ -363,6 +371,7 @@ document.addEventListener('DOMContentLoaded', () => {
             chatClose.addEventListener('click', () => {
                 chatWidget.style.display = 'none';
                 chatTrigger.style.display = 'flex';
+                localStorage.setItem('silverwiki_chat_open', 'false');
             });
         }
 
@@ -396,6 +405,9 @@ document.addEventListener('DOMContentLoaded', () => {
             chatInput.style.height = '44px';
             
             const typingMsg = appendMessage('...', 'system');
+            
+            const wormIcon = document.querySelector('.ai-chat-title .icon');
+            if (wormIcon) wormIcon.classList.add('is-thinking');
 
             try {
                 const csrfToken = document.querySelector('meta[name="token"]').content;
@@ -435,6 +447,8 @@ document.addEventListener('DOMContentLoaded', () => {
                 }
             } catch (error) {
                 typingMsg.textContent = 'Fehler bei der Kommunikation mit der KI.';
+            } finally {
+                if (wormIcon) wormIcon.classList.remove('is-thinking');
             }
         };
 

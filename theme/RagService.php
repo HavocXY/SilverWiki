@@ -204,7 +204,7 @@ Route::middleware(['web'])->group(function () {
     // API: Chat query
     Route::post('/api/silverwiki/chat', function (\Illuminate\Http\Request $request) {
         $question = $request->input('question');
-        $model = setting('silverwiki-llm-model', 'gemma4:e2b');
+        $model = setting('silverwiki-llm-model', 'gemma4:e4b');
 
         if (!$question) return response()->json(['error' => 'Keine Frage übermittelt'], 400);
 
@@ -213,21 +213,27 @@ Route::middleware(['web'])->group(function () {
         
         $contextTexts = [];
         $sourceLinks = [];
+        $sourceMap = [];
+        $sourceIndex = 1;
+
         foreach ($chunks as $chunk) {
             $page = \BookStack\Entities\Models\Page::find($chunk['page_id']);
             $sourceUrl = $page ? url($page->getUrl()) : '';
             $sourceTitle = $page ? $page->name : 'Unbekannte Seite';
             
-            $contextTexts[] = "INHALT AUS SEITE '{$sourceTitle}':\n" . $chunk['chunk_text'];
-            
-            if ($page && !isset($sourceLinks[$page->id])) {
-                $sourceLinks[$page->id] = "- {$sourceTitle}: {$sourceUrl}";
+            if ($page && !isset($sourceMap[$page->id])) {
+                $sourceMap[$page->id] = $sourceIndex;
+                $sourceLinks[$page->id] = "[{$sourceIndex}]: {$sourceUrl} (Titel: {$sourceTitle})";
+                $sourceIndex++;
             }
+            
+            $currentIndex = $page ? $sourceMap[$page->id] : '?';
+            $contextTexts[] = "INHALT AUS QUELLE [{$currentIndex}] ('{$sourceTitle}'):\n" . $chunk['chunk_text'];
         }
         $context = implode("\n\n---\n\n", $contextTexts);
         $sourcesList = implode("\n", $sourceLinks);
 
-        $prompt = "Du bist ein strenger KI-Wissens-Assistent für dieses Wiki. Beantworte die folgende Frage AUSSCHLIESSLICH basierend auf dem bereitgestellten Kontext. Verwende NIEMALS dein eigenes, vortrainiertes Wissen. Wenn die gesuchte Information nicht explizit im Kontext zu finden ist, antworte exakt mit: 'Dazu gibt es leider keine Informationen im Wiki.' Erfinde keine Fakten. WICHTIG: Du MUSST am Ende deiner Antwort zwingend die entsprechenden Quell-Links auflisten (unter der Überschrift 'Quellen:'), aus denen du die Information bezogen hast.\n\nVerfügbare Quellen:\n{$sourcesList}\n\nKontext:\n{$context}\n\nFrage: {$question}";
+        $prompt = "Du bist ein strenger KI-Wissens-Assistent für dieses Wiki. Beantworte die folgende Frage AUSSCHLIESSLICH basierend auf dem bereitgestellten Kontext. Verwende NIEMALS dein eigenes, vortrainiertes Wissen. Wenn die gesuchte Information nicht explizit im Kontext zu finden ist, antworte exakt mit: 'Dazu gibt es leider keine Informationen im Wiki.' Erfinde keine Fakten. WICHTIG: Belege deine Aussagen direkt im Text mit einem klickbaren Markdown-Link zur Quelle in Form einer Nummer, z.B. so: [[1]](URL_DER_QUELLE). Hänge am Ende deiner Antwort KEINE separate Quellenliste mehr an. Nutze die korrekte URL aus der Quellenliste.\n\nVerfügbare Quellen:\n{$sourcesList}\n\nKontext:\n{$context}\n\nFrage: {$question}";
 
         // 2. Stream to Ollama
         $response = Http::timeout(60)->withOptions(['stream' => true])->post('http://ollama:11434/api/generate', [
