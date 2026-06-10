@@ -5,6 +5,7 @@ SilverWiki is a state-of-the-art, self-hosted company wiki. It is built on the s
 The integration is built to be **update-safe**: the original BookStack remains untouched as a Git repository, while our theme is stored separately and mounted in via a Docker volume.
 
 ### 🌟 Added Value: Custom Features on top of BookStack
+* **Local AI Knowledge Assistant (RAG):** Built-in chat assistant powered by Ollama that automatically indexes BookStack pages and answers questions strictly based on the wiki context.
 * **Gemini "Neural Expressive" Redesign:** Seamless integration of Outfit (headings) and Inter (body) fonts, custom color palettes, and deep dark/light mode optimization.
 * **Interactive Tweaks Panel:** A custom settings panel allowing real-time layout density selection (Normal vs. Compact), background customization (Fluid Gradient vs. Flat Neutral), and card layout modes.
 * **Smart Data Tables:** Every standard table on wiki pages automatically becomes an interactive, sortable, and searchable datatable. It dynamically hides controls for small lists to keep clean layouts.
@@ -191,6 +192,7 @@ If port `8080` (web application) or `8025` (Mailhog) is already in use by anothe
 
 ## 5. 📋 Features
 
+* **Local AI Knowledge Assistant (RAG):** Built-in chat assistant powered by Ollama that automatically indexes BookStack pages and answers questions strictly based on the wiki context.
 * **Gemini "Neural Expressive" UI/UX:** Minimalist, high-fidelity interface using the **Outfit** font (headings) and **Inter** (body), fluid brand gradients, and optimal contrast for excellent readability throughout the UI.
 * **Non-destructive Architecture:** BookStack can be updated at any time via `git pull` without overwriting our custom theme or causing merge conflicts.
 * **Built-in Tweaks Panel:** Users can configure layout density (Normal vs. Compact), view type (Cards vs. List), and background style (Gradient + Grid vs. Flat) directly in the UI. Settings are persisted in LocalStorage.
@@ -198,7 +200,6 @@ If port `8080` (web application) or `8025` (Mailhog) is already in use by anothe
 * **Interactive Data Tables:** Standard tables on wiki pages (with headers) are automatically upgraded with search filtering, client-side sorting, and pagination using a custom Gemini dark/light style.
 * **Corporate Templates Library:** Includes standard operating procedures (SOPs), norms, data sheets, and onboarding templates. Seeded via a single Artisan console command.
 * **draw.io Custom Theme:** Integrates custom Gemini color palettes and Outfit/Inter fonts automatically inside the builtin draw.io editor.
-* **Local AI Knowledge Assistant (RAG):** Built-in chat assistant powered by Ollama that automatically indexes BookStack pages and answers questions strictly based on the wiki context.
 
 ---
 
@@ -247,6 +248,7 @@ SilverWiki ist ein hochmodernes, firmeninternes Wiki für den Eigengebrauch. Es 
 Die Integration ist **update-sicher** aufgebaut: Das originale BookStack bleibt als Git-Repository unberührt, während unser Theme getrennt gelagert und per Docker-Volume hineingemountet wird.
 
 ### 🌟 Mehrwert: Custom-Features zusätzlich zu BookStack
+* **Lokaler KI-Wissens-Assistent (RAG):** Integrierter Chat-Assistent ("Bookworm") betrieben mit Ollama, der BookStack-Seiten automatisch indiziert und Fragen streng auf Basis des Wiki-Kontexts beantwortet.
 * **Gemini „Neural Expressive“ Redesign:** Outfit-Schriftart für markante Überschriften, Inter-Schriftart für Fließtexte und flüssige Cyan-Indigo-Lila-Verläufe in Dark- und Light-Modes.
 * **Interaktives Tweaks-Panel:** Live-Anpassung der Layout-Dichte (Normal vs. Kompakt), des Hintergrunds (Farbverlauf + Gitter vs. Neutral-Flach) und der Buch-Darstellung, direkt im UI steuerbar und im LocalStorage gesichert.
 * **Smarte Datentabellen:** Automatische Verwandlung von Standardtabellen in durchsuchbare, sortierbare und paginierte Datentabellen mit dynamischer Skalierung für kleine und große Tabellen.
@@ -433,6 +435,7 @@ Falls Port `8080` (Webanwendung) oder `8025` (Mailhog) bereits von einem anderen
 
 ## 5. 📋 Features
 
+* **Lokaler KI-Wissens-Assistent (RAG):** Integrierter Chat-Assistent ("Bookworm") betrieben mit Ollama, der BookStack-Seiten automatisch indiziert und Fragen streng auf Basis des Wiki-Kontexts beantwortet.
 * **Gemini „Neural Expressive“ UI/UX:** Minimalistisches, hochauflösendes Interface mit der Schriftart **Outfit** (Überschriften) und **Inter** (Body), flüssigen Brand-Gradients und optimalem Kontrast für beste Lesbarkeit in den Seitenbereichen.
 * **Zerstörungsfreie Architektur:** BookStack kann jederzeit via `git pull` aktualisiert werden, ohne dass unser Custom-Theme überschrieben wird oder Merge-Konflikte auftreten.
 * **Integriertes Tweaks-Panel:** Nutzer können Layout-Dichte (Normal vs. Kompakt), Layout-Typ (Karten vs. Liste) und Hintergrund-Stile (Gradient + Grid vs. Flat) direkt im UI einstellen. Die Einstellungen werden im LocalStorage persistiert.
@@ -440,7 +443,6 @@ Falls Port `8080` (Webanwendung) oder `8025` (Mailhog) bereits von einem anderen
 * **Interaktive & sortierbare Tabellen:** Tabellen auf Wiki-Seiten (sofern sie Kopfzeilen besitzen) erhalten vollautomatisch clientseitige Sortierung, Suche und Pagination basierend auf `simple-datatables`, wunderschön gestaltet im SilverWiki CSS-Design.
 * **Seitenvorlagen-Bibliothek:** Vordefinierte Vorlagen für Arbeitsanweisungen (SOPs), Normen-Zusammenfassungen, Materialdatenblätter und Onboarding-Steckbriefe in einem eigenen Buch. Importiert und aktualisiert über ein custom Artisan Command.
 * **draw.io Custom Theme Integration:** Integration von unternehmenseigenen Gemini-Farbpaletten und Standard-Schriftarten (Outfit, Inter) direkt im integrierten draw.io-Editor.
-* **Lokaler KI-Wissens-Assistent (RAG):** Integrierter Chat-Assistent ("Bookworm") betrieben mit Ollama, der BookStack-Seiten automatisch indiziert und Fragen streng auf Basis des Wiki-Kontexts beantwortet.
 
 ---
 
