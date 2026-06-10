@@ -408,6 +408,8 @@ document.addEventListener('DOMContentLoaded', () => {
             
             const wormIcon = document.querySelector('.ai-chat-title .icon');
             if (wormIcon) wormIcon.classList.add('is-thinking');
+            const chatHeader = document.querySelector('.ai-chat-header');
+            if (chatHeader) chatHeader.classList.add('is-thinking');
 
             try {
                 const csrfToken = document.querySelector('meta[name="token"]').content;
@@ -423,32 +425,70 @@ document.addEventListener('DOMContentLoaded', () => {
                 typingMsg.textContent = '';
                 const reader = response.body.getReader();
                 const decoder = new TextDecoder("utf-8");
+                let buffer = '';
+                let fullText = '';
+
+                // einfache Markdown-Konvertierung
+                const parseMarkdown = (text) => {
+                    let html = text
+                        .replace(/&/g, '&amp;')
+                        .replace(/</g, '&lt;')
+                        .replace(/>/g, '&gt;');
+                    
+                    // [[1]](url) oder [1](url) Links
+                    html = html.replace(/\[\[(\d+)\]\]\((https?:\/\/[^\s)]+)\)/g, '<a href="$2" target="_blank" rel="noopener noreferrer">[$1]</a>');
+                    html = html.replace(/\[([^\]]+)\]\((https?:\/\/[^\s)]+)\)/g, '<a href="$2" target="_blank" rel="noopener noreferrer">$1</a>');
+                    
+                    // **fett**
+                    html = html.replace(/\*\*([^*]+)\*\*/g, '<strong>$1</strong>');
+                    
+                    // Zeilenumbrüche
+                    html = html.replace(/\n/g, '<br>');
+                    
+                    return html;
+                };
 
                 while (true) {
                     const { done, value } = await reader.read();
                     if (done) break;
                     
-                    const chunk = decoder.decode(value, { stream: true });
-                    const lines = chunk.split('\n');
+                    buffer += decoder.decode(value, { stream: true });
+                    const lines = buffer.split('\n');
+                    buffer = lines.pop();
                     
                     for (const line of lines) {
                         if (line.trim()) {
                             try {
                                 const parsed = JSON.parse(line);
                                 if (parsed.response) {
-                                    typingMsg.textContent += parsed.response;
+                                    fullText += parsed.response;
+                                    typingMsg.innerHTML = parseMarkdown(fullText);
                                     chatMessages.scrollTop = chatMessages.scrollHeight;
                                 }
                             } catch (e) {
-                                // Sometimes multiple JSON objects arrive in one line if buffered
+                                // Temporär unvollständiges JSON ignorieren
                             }
                         }
                     }
+                }
+
+                // Restlicher Puffer flushen
+                if (buffer.trim()) {
+                    try {
+                        const parsed = JSON.parse(buffer);
+                        if (parsed.response) {
+                            fullText += parsed.response;
+                            typingMsg.innerHTML = parseMarkdown(fullText);
+                            chatMessages.scrollTop = chatMessages.scrollHeight;
+                        }
+                    } catch (e) {}
                 }
             } catch (error) {
                 typingMsg.textContent = 'Fehler bei der Kommunikation mit der KI.';
             } finally {
                 if (wormIcon) wormIcon.classList.remove('is-thinking');
+                const chatHeader = document.querySelector('.ai-chat-header');
+                if (chatHeader) chatHeader.classList.remove('is-thinking');
             }
         };
 
@@ -528,13 +568,40 @@ document.addEventListener('DOMContentLoaded', () => {
                         body: JSON.stringify({ model })
                     });
                     
+                    if (!response.ok) {
+                        throw new Error('Netzwerk-Antwort war nicht ok');
+                    }
+
                     const reader = response.body.getReader();
                     const decoder = new TextDecoder();
+                    let pullBuffer = '';
+                    let pullFailed = false;
                     
                     while (true) {
                         const { done, value } = await reader.read();
                         if (done) break;
+                        
+                        pullBuffer += decoder.decode(value, { stream: true });
+                        const lines = pullBuffer.split('\n');
+                        pullBuffer = lines.pop();
+                        
+                        for (const line of lines) {
+                            if (line.trim()) {
+                                try {
+                                    const parsed = JSON.parse(line);
+                                    if (parsed.error) {
+                                        pullFailed = true;
+                                        console.error('Ollama pull Fehler:', parsed.error);
+                                    }
+                                } catch (e) {}
+                            }
+                        }
                     }
+
+                    if (pullFailed) {
+                        throw new Error('Modell-Pull fehlgeschlagen');
+                    }
+
                     pullBtn.textContent = '✅';
                     setTimeout(() => { pullBtn.textContent = origText; pullBtn.disabled = false; pullInput.value = ''; }, 2000);
                     

@@ -4,7 +4,9 @@
   "description": "Integration tests for SilverWiki custom features",
   "main": "test-tables.js",
   "scripts": {
-    "test": "node test-tables.js"
+    "test": "node test-tables.js",
+    "test:rag": "node test-rag-chat.js",
+    "test:all": "node test-tables.js && node test-templates-drawio.js && node test-rag-chat.js"
   },
   "dependencies": {
     "playwright": "^1.44.0"

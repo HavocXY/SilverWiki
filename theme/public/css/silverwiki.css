@@ -1470,6 +1470,52 @@ html.density-dense .datatable-pagination a {
   justify-content: space-between;
   align-items: center;
   background: var(--w-bg-surface);
+  position: relative;
+}
+
+.ai-chat-title,
+.ai-chat-actions {
+  position: relative;
+  z-index: 2;
+}
+
+.ai-chat-header::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: radial-gradient(circle at 50% 50%, var(--gemini-glow) 0%, transparent 80%);
+  opacity: 0;
+  transition: opacity 0.5s ease;
+  pointer-events: none;
+  z-index: 0;
+}
+
+.ai-chat-header.is-thinking::before {
+  opacity: 1;
+  animation: header-glow-pulse 2s ease-in-out infinite;
+}
+
+.ai-chat-header::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  height: 2px;
+  background: var(--gemini-gradient);
+  background-size: 200% 100%;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+  pointer-events: none;
+  z-index: 1;
+}
+
+.ai-chat-header.is-thinking::after {
+  opacity: 1;
+  animation: gemini-glow-flow 3s linear infinite;
 }
 
 .ai-chat-title {
@@ -1660,4 +1706,15 @@ html.density-dense .datatable-pagination a {
   display: inline-block;
   animation: worm-wiggle 1s ease-in-out infinite;
   transform-origin: center;
+}
+
+@keyframes header-glow-pulse {
+  0%, 100% { opacity: 0.3; }
+  50% { opacity: 0.8; }
+}
+
+@keyframes gemini-glow-flow {
+  0% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
 }

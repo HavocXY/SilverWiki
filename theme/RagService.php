@@ -45,7 +45,7 @@ class IndexRagCommand extends Command
     public function handle()
     {
         $this->info('Lade alle Wiki-Seiten...');
-        $pages = Page::all();
+        $pages = Page::where('draft', '=', false)->get();
         $total = $pages->count();
         $this->info("Gefunden: {$total} Seiten. Starte Indizierung...");
 
@@ -91,6 +91,7 @@ class RagService
             if ($response->successful()) {
                 return $response->json('embedding');
             }
+            \Log::error('Ollama Embedding Fehler (HTTP ' . $response->status() . '): ' . $response->body());
         } catch (\Exception $e) {
             \Log::error('Ollama Embedding Fehler: ' . $e->getMessage());
         }
@@ -102,8 +103,11 @@ class RagService
         // First, delete old embeddings for this page
         DB::table('silverwiki_embeddings')->where('page_id', $page->id)->delete();
 
+        // Skip drafts
+        if ($page->draft) return;
+
         // Process new content
-        $content = $page->html ?: $page->text;
+        $content = $page->html ?? $page->text ?? '';
         if (empty(trim($content))) return;
 
         $chunks = self::chunkText($content);
@@ -147,13 +151,20 @@ class RagService
         $queryEmbedding = self::getEmbedding($queryText);
         if (!$queryEmbedding) return [];
 
-        // Fetch all embeddings (For a large wiki, this requires MySQL vector plugin or a real vector DB! 
-        // For standard small wikis (<10k pages), doing it in PHP memory takes ~10-50ms).
-        $allRecords = DB::table('silverwiki_embeddings')->get(['id', 'page_id', 'chunk_text', 'vector_json']);
+        // Fetch only visible page IDs for security
+        $visiblePageIds = \BookStack\Entities\Models\Page::visible()->pluck('id')->all();
+        if (empty($visiblePageIds)) return [];
+
+        // Fetch embeddings for visible pages
+        $allRecords = DB::table('silverwiki_embeddings')
+            ->whereIn('page_id', $visiblePageIds)
+            ->get(['id', 'page_id', 'chunk_text', 'vector_json']);
         
         $results = [];
         foreach ($allRecords as $record) {
             $recordVector = json_decode($record->vector_json, true);
+            if (!is_array($recordVector)) continue;
+            
             $similarity = self::cosineSimilarity($queryEmbedding, $recordVector);
             $results[] = [
                 'id' => $record->id,
@@ -171,7 +182,7 @@ class RagService
         return array_slice($results, 0, $limit);
     }
 
-    protected static function cosineSimilarity($vec1, $vec2)
+    public static function cosineSimilarity($vec1, $vec2)
     {
         $dotProduct = 0.0;
         $normA = 0.0;
@@ -217,17 +228,19 @@ Route::middleware(['web'])->group(function () {
         $sourceIndex = 1;
 
         foreach ($chunks as $chunk) {
-            $page = \BookStack\Entities\Models\Page::find($chunk['page_id']);
-            $sourceUrl = $page ? url($page->getUrl()) : '';
-            $sourceTitle = $page ? $page->name : 'Unbekannte Seite';
+            $page = \BookStack\Entities\Models\Page::visible()->find($chunk['page_id']);
+            if (!$page) continue;
             
-            if ($page && !isset($sourceMap[$page->id])) {
+            $sourceUrl = url($page->getUrl());
+            $sourceTitle = $page->name;
+            
+            if (!isset($sourceMap[$page->id])) {
                 $sourceMap[$page->id] = $sourceIndex;
                 $sourceLinks[$page->id] = "[{$sourceIndex}]: {$sourceUrl} (Titel: {$sourceTitle})";
                 $sourceIndex++;
             }
             
-            $currentIndex = $page ? $sourceMap[$page->id] : '?';
+            $currentIndex = $sourceMap[$page->id];
             $contextTexts[] = "INHALT AUS QUELLE [{$currentIndex}] ('{$sourceTitle}'):\n" . $chunk['chunk_text'];
         }
         $context = implode("\n\n---\n\n", $contextTexts);
@@ -242,8 +255,18 @@ Route::middleware(['web'])->group(function () {
             'stream' => true,
         ]);
 
+        if (!$response->successful()) {
+            \Log::error('Ollama Chat Fehler (HTTP ' . $response->status() . '): ' . $response->body());
+            return response()->json(['error' => 'Fehler bei der Kommunikation mit der KI.'], 500);
+        }
+
         return response()->stream(function () use ($response) {
-            echo $response->getBody();
+            $body = $response->getBody();
+            while (!$body->eof()) {
+                echo $body->read(1024);
+                ob_flush();
+                flush();
+            }
         }, 200, [
             'Content-Type' => 'application/x-ndjson',
             'Cache-Control' => 'no-cache',
@@ -282,8 +305,18 @@ Route::middleware(['web'])->group(function () {
             'stream' => true,
         ]);
 
+        if (!$response->successful()) {
+            \Log::error('Ollama Pull Fehler (HTTP ' . $response->status() . '): ' . $response->body());
+            return response()->json(['error' => 'Fehler beim Herunterladen des Modells.'], 500);
+        }
+
         return response()->stream(function () use ($response) {
-            echo $response->getBody();
+            $body = $response->getBody();
+            while (!$body->eof()) {
+                echo $body->read(1024);
+                ob_flush();
+                flush();
+            }
         }, 200, [
             'Content-Type' => 'application/x-ndjson',
             'Cache-Control' => 'no-cache',
