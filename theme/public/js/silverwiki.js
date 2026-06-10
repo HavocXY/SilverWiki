@@ -329,5 +329,215 @@ document.addEventListener('DOMContentLoaded', () => {
         
         console.log('✅ Draw.io editor configured with SilverWiki Gemini palette & typography.');
     });
+    // ── 7. RAG KI-Chat Logic ───────────────────────────────────────────────
+    // Chat Layout Settings
+    const savedChatLayout = localStorage.getItem('silverwiki_chat_layout') || 'floating';
+    const chatWidget = document.getElementById('ai-chat-container');
+    const chatTrigger = document.getElementById('ai-chat-trigger');
+    const chatClose = document.getElementById('ai-chat-close');
+
+    if (chatWidget) {
+        chatWidget.classList.add(`chat-layout-${savedChatLayout}`);
+        updateActiveButton('chatLayout', savedChatLayout);
+
+        // Chat Layout Tweaks
+        document.querySelectorAll('[data-tweak-group="chatLayout"]').forEach(btn => {
+            btn.addEventListener('click', () => {
+                const val = btn.getAttribute('data-tweak-value');
+                chatWidget.classList.remove('chat-layout-floating', 'chat-layout-drawer');
+                chatWidget.classList.add(`chat-layout-${val}`);
+                localStorage.setItem('silverwiki_chat_layout', val);
+                updateActiveButton('chatLayout', val);
+            });
+        });
+
+        // Open/Close Chat
+        if (chatTrigger) {
+            chatTrigger.addEventListener('click', () => {
+                chatWidget.style.display = 'flex';
+                chatTrigger.style.display = 'none';
+                document.getElementById('ai-chat-input').focus();
+            });
+        }
+        if (chatClose) {
+            chatClose.addEventListener('click', () => {
+                chatWidget.style.display = 'none';
+                chatTrigger.style.display = 'flex';
+            });
+        }
+
+        // Chat Logic
+        const chatInput = document.getElementById('ai-chat-input');
+        const chatSendBtn = document.getElementById('ai-chat-send');
+        const chatMessages = document.getElementById('ai-chat-messages');
+
+        if (chatInput) {
+            chatInput.addEventListener('input', function() {
+                this.style.height = '44px';
+                this.style.height = this.scrollHeight + 'px';
+            });
+        }
+
+        const appendMessage = (text, sender) => {
+            const msgEl = document.createElement('div');
+            msgEl.className = `ai-chat-message ${sender}`;
+            msgEl.textContent = text;
+            chatMessages.appendChild(msgEl);
+            chatMessages.scrollTop = chatMessages.scrollHeight;
+            return msgEl;
+        };
+
+        const sendMessage = async () => {
+            const question = chatInput.value.trim();
+            if (!question) return;
+
+            appendMessage(question, 'user');
+            chatInput.value = '';
+            chatInput.style.height = '44px';
+            
+            const typingMsg = appendMessage('...', 'system');
+
+            try {
+                const csrfToken = document.querySelector('meta[name="token"]').content;
+                const response = await fetch('/api/silverwiki/chat', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-CSRF-TOKEN': csrfToken
+                    },
+                    body: JSON.stringify({ question })
+                });
+
+                typingMsg.textContent = '';
+                const reader = response.body.getReader();
+                const decoder = new TextDecoder("utf-8");
+
+                while (true) {
+                    const { done, value } = await reader.read();
+                    if (done) break;
+                    
+                    const chunk = decoder.decode(value, { stream: true });
+                    const lines = chunk.split('\n');
+                    
+                    for (const line of lines) {
+                        if (line.trim()) {
+                            try {
+                                const parsed = JSON.parse(line);
+                                if (parsed.response) {
+                                    typingMsg.textContent += parsed.response;
+                                    chatMessages.scrollTop = chatMessages.scrollHeight;
+                                }
+                            } catch (e) {
+                                // Sometimes multiple JSON objects arrive in one line if buffered
+                            }
+                        }
+                    }
+                }
+            } catch (error) {
+                typingMsg.textContent = 'Fehler bei der Kommunikation mit der KI.';
+            }
+        };
+
+        if (chatSendBtn) {
+            chatSendBtn.addEventListener('click', sendMessage);
+        }
+        if (chatInput) {
+            chatInput.addEventListener('keypress', (e) => {
+                if (e.key === 'Enter' && !e.shiftKey) {
+                    e.preventDefault();
+                    sendMessage();
+                }
+            });
+        }
+
+        // Admin Tools
+        const settingsBtn = document.getElementById('ai-chat-settings-btn');
+        const settingsMenu = document.getElementById('ai-chat-settings-menu');
+        
+        if (settingsBtn && settingsMenu) {
+            settingsBtn.addEventListener('click', (e) => {
+                e.stopPropagation();
+                settingsMenu.style.display = settingsMenu.style.display === 'none' ? 'flex' : 'none';
+            });
+            document.addEventListener('click', (e) => {
+                if (!settingsMenu.contains(e.target) && !settingsBtn.contains(e.target)) {
+                    settingsMenu.style.display = 'none';
+                }
+            });
+        }
+
+        const modelSelect = document.getElementById('ollama-model-select');
+        const pullInput = document.getElementById('ollama-model-pull-input');
+        const pullBtn = document.getElementById('ollama-model-pull-btn');
+
+        if (modelSelect) {
+            fetch('/api/silverwiki/ollama/models')
+                .then(res => res.json())
+                .then(data => {
+                    if (data.models) {
+                        const currentVal = modelSelect.value;
+                        modelSelect.innerHTML = '';
+                        data.models.forEach(m => {
+                            const opt = document.createElement('option');
+                            opt.value = m.name;
+                            opt.textContent = m.name;
+                            if (m.name === currentVal) opt.selected = true;
+                            modelSelect.appendChild(opt);
+                        });
+                    }
+                }).catch(console.error);
+
+            modelSelect.addEventListener('change', () => {
+                const csrfToken = document.querySelector('meta[name="token"]').content;
+                fetch('/api/silverwiki/ollama/model/set', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json', 'X-CSRF-TOKEN': csrfToken },
+                    body: JSON.stringify({ model: modelSelect.value })
+                });
+            });
+        }
+
+        if (pullBtn && pullInput) {
+            pullBtn.addEventListener('click', async () => {
+                const model = pullInput.value.trim();
+                if (!model) return;
+                
+                const origText = pullBtn.textContent;
+                pullBtn.textContent = '⏳';
+                pullBtn.disabled = true;
+
+                try {
+                    const csrfToken = document.querySelector('meta[name="token"]').content;
+                    const response = await fetch('/api/silverwiki/ollama/model/pull', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json', 'X-CSRF-TOKEN': csrfToken },
+                        body: JSON.stringify({ model })
+                    });
+                    
+                    const reader = response.body.getReader();
+                    const decoder = new TextDecoder();
+                    
+                    while (true) {
+                        const { done, value } = await reader.read();
+                        if (done) break;
+                    }
+                    pullBtn.textContent = '✅';
+                    setTimeout(() => { pullBtn.textContent = origText; pullBtn.disabled = false; pullInput.value = ''; }, 2000);
+                    
+                    if (modelSelect) {
+                        const opt = document.createElement('option');
+                        opt.value = model;
+                        opt.textContent = model;
+                        modelSelect.appendChild(opt);
+                        modelSelect.value = model;
+                        modelSelect.dispatchEvent(new Event('change'));
+                    }
+                } catch (error) {
+                    pullBtn.textContent = '❌';
+                    setTimeout(() => { pullBtn.textContent = origText; pullBtn.disabled = false; }, 2000);
+                }
+            });
+        }
+    }
 });
 

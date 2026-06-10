@@ -3,6 +3,7 @@
 
 volumes:
   db: {}
+  ollama_data: {}
 
 services:
   db:
@@ -56,3 +57,26 @@ services:
     restart: unless-stopped
     ports:
       - ${DEV_MAIL_PORT:-8025}:8025
+  ollama:
+    image: ollama/ollama:latest
+    restart: unless-stopped
+    volumes:
+      - ollama_data:/root/.ollama
+    ports:
+      - 11434:11434
+  ollama-init:
+    image: ollama/ollama:latest
+    depends_on:
+      - ollama
+    environment:
+      - OLLAMA_HOST=ollama:11434
+    entrypoint: >
+      sh -c '
+      echo "Waiting for Ollama to be ready...";
+      while ! ollama list > /dev/null 2>&1; do sleep 2; done;
+      echo "Pulling nomic-embed-text...";
+      ollama pull nomic-embed-text;
+      echo "Pulling gemma4:e2b...";
+      ollama pull gemma4:e2b;
+      echo "Done.";
+      '

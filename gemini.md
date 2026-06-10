@@ -90,3 +90,5 @@ BookStack läuft als PHP/Laravel-App mit einer MySQL-Datenbank. Zur lokalen Ausf
 * **Regel 7: draw.io Custom Theme Integration:**
   Die Farbpalette und Schriftarten des integrierten draw.io-Editors werden über ein `editor-drawio::configure` Event in `silverwiki.js` angepasst. Dadurch stehen den Nutzern direkt die SilverWiki Gemini-Brandingfarben (Cyan, Indigo, Lila, Coral) und Fonts (Outfit, Inter) standardmäßig zur Verfügung.
 
+* **Regel 8: KI-Assistent & RAG System:**
+  Der lokale Chat-Assistent ("Bookworm") ist direkt in PHP/Laravel in `theme/RagService.php` integriert. Die Embeddings werden via Ollama (im Docker-Netzwerk unter `http://ollama:11434`) generiert und in einer eigenen Datenbanktabelle `silverwiki_embeddings` gespeichert. Das aktive Ollama-Modell wird über die BookStack Settings unter `silverwiki-llm-model` verwaltet (nur für Admins sichtbar/änderbar). Die Indizierung passiert via Event-Listener bei `Page::saved` und `Page::deleted` vollautomatisch.

@@ -197,7 +197,8 @@ If port `8080` (web application) or `8025` (Mailhog) is already in use by anothe
 * **Shelves as Categories:** BookStack's shelves are displayed seamlessly as main categories in the left sidebar.
 * **Interactive Data Tables:** Standard tables on wiki pages (with headers) are automatically upgraded with search filtering, client-side sorting, and pagination using a custom Gemini dark/light style.
 * **Corporate Templates Library:** Includes standard operating procedures (SOPs), norms, data sheets, and onboarding templates. Seeded via a single Artisan console command.
-* **draw.io Custom Theme:** Integrates custom Gemini color palettes and Outfit/Inter fonts automatically inside the built-in draw.io editor.
+* **draw.io Custom Theme:** Integrates custom Gemini color palettes and Outfit/Inter fonts automatically inside the builtin draw.io editor.
+* **Local AI Knowledge Assistant (RAG):** Built-in chat assistant powered by Ollama that automatically indexes BookStack pages and answers questions strictly based on the wiki context.
 
 ---
 
@@ -439,6 +440,7 @@ Falls Port `8080` (Webanwendung) oder `8025` (Mailhog) bereits von einem anderen
 * **Interaktive & sortierbare Tabellen:** Tabellen auf Wiki-Seiten (sofern sie Kopfzeilen besitzen) erhalten vollautomatisch clientseitige Sortierung, Suche und Pagination basierend auf `simple-datatables`, wunderschön gestaltet im SilverWiki CSS-Design.
 * **Seitenvorlagen-Bibliothek:** Vordefinierte Vorlagen für Arbeitsanweisungen (SOPs), Normen-Zusammenfassungen, Materialdatenblätter und Onboarding-Steckbriefe in einem eigenen Buch. Importiert und aktualisiert über ein custom Artisan Command.
 * **draw.io Custom Theme Integration:** Integration von unternehmenseigenen Gemini-Farbpaletten und Standard-Schriftarten (Outfit, Inter) direkt im integrierten draw.io-Editor.
+* **Lokaler KI-Wissens-Assistent (RAG):** Integrierter Chat-Assistent ("Bookworm") betrieben mit Ollama, der BookStack-Seiten automatisch indiziert und Fragen streng auf Basis des Wiki-Kontexts beantwortet.
 
 ---
 

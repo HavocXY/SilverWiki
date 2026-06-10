@@ -118,6 +118,15 @@
                 <button class="tweaks-option-btn" data-tweak-group="bgStyle" data-tweak-value="flat">{{ trans('silverwiki.tweaks_bg_flat') }}</button>
             </div>
         </div>
+        
+        <!-- Chat Layout Selection -->
+        <div class="tweaks-section">
+            <div class="tweaks-section-title">KI-Chat Layout</div>
+            <div class="tweaks-options-group">
+                <button class="tweaks-option-btn" data-tweak-group="chatLayout" data-tweak-value="floating">Floating</button>
+                <button class="tweaks-option-btn" data-tweak-group="chatLayout" data-tweak-value="drawer">Sidebar</button>
+            </div>
+        </div>
     </div>
 
     @if($cspNonce ?? false)
@@ -127,6 +136,9 @@
 
     @include('layouts.parts.base-body-end')
     
+    <!-- SilverWiki AI Chat Integration -->
+    @include('layouts.parts.ai-chat')
+
     <!-- SilverWiki custom logic -->
     <script src="/theme/silverwiki/js/silverwiki.js" @if($cspNonce ?? false) nonce="{{ $cspNonce }}" @endif defer></script>
 </body>

@@ -123,3 +123,6 @@ class ImportTemplatesCommand extends Command
 // Register command with BookStack Theme Service
 // This exposes our custom Artisan console command to Laravel's CLI kernel automatically.
 Theme::registerCommand(new ImportTemplatesCommand());
+
+// Include the new RAG AI Service
+require_once __DIR__ . '/RagService.php';
