@@ -335,6 +335,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const chatWidget = document.getElementById('ai-chat-container');
     const chatTrigger = document.getElementById('ai-chat-trigger');
     const chatClose = document.getElementById('ai-chat-close');
+    const chatMessages = document.getElementById('ai-chat-messages');
     const chatIsOpen = sessionStorage.getItem('silverwiki_chat_open') === 'true';
 
     if (chatWidget) {
@@ -380,7 +381,6 @@ document.addEventListener('DOMContentLoaded', () => {
         const linkNewBtn = document.getElementById('ai-chat-link-new');
         const linkCurrentBtn = document.getElementById('ai-chat-link-current');
         const linkCancelBtn = document.getElementById('ai-chat-link-cancel');
-        const chatMessages = document.getElementById('ai-chat-messages');
         let pendingUrl = '';
 
         if (chatMessages && linkModal && linkNewBtn && linkCurrentBtn && linkCancelBtn) {
@@ -426,7 +426,6 @@ document.addEventListener('DOMContentLoaded', () => {
         // Chat Logic
         const chatInput = document.getElementById('ai-chat-input');
         const chatSendBtn = document.getElementById('ai-chat-send');
-        const chatMessages = document.getElementById('ai-chat-messages');
 
         if (chatInput) {
             chatInput.addEventListener('input', function() {
