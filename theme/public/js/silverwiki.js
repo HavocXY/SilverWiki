@@ -335,7 +335,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const chatWidget = document.getElementById('ai-chat-container');
     const chatTrigger = document.getElementById('ai-chat-trigger');
     const chatClose = document.getElementById('ai-chat-close');
-    const chatIsOpen = localStorage.getItem('silverwiki_chat_open') === 'true';
+    const chatIsOpen = sessionStorage.getItem('silverwiki_chat_open') === 'true';
 
     if (chatWidget) {
         chatWidget.classList.add(`chat-layout-${savedChatLayout}`);
@@ -363,7 +363,7 @@ document.addEventListener('DOMContentLoaded', () => {
             chatTrigger.addEventListener('click', () => {
                 chatWidget.style.display = 'flex';
                 chatTrigger.style.display = 'none';
-                localStorage.setItem('silverwiki_chat_open', 'true');
+                sessionStorage.setItem('silverwiki_chat_open', 'true');
                 document.getElementById('ai-chat-input').focus();
             });
         }
@@ -371,9 +371,57 @@ document.addEventListener('DOMContentLoaded', () => {
             chatClose.addEventListener('click', () => {
                 chatWidget.style.display = 'none';
                 chatTrigger.style.display = 'flex';
-                localStorage.setItem('silverwiki_chat_open', 'false');
+                sessionStorage.setItem('silverwiki_chat_open', 'false');
             });
         }
+
+        // Link Confirmation Logic
+        const linkModal = document.getElementById('ai-chat-link-modal');
+        const linkNewBtn = document.getElementById('ai-chat-link-new');
+        const linkCurrentBtn = document.getElementById('ai-chat-link-current');
+        const linkCancelBtn = document.getElementById('ai-chat-link-cancel');
+        const chatMessages = document.getElementById('ai-chat-messages');
+        let pendingUrl = '';
+
+        if (chatMessages && linkModal && linkNewBtn && linkCurrentBtn && linkCancelBtn) {
+            chatMessages.addEventListener('click', (e) => {
+                const link = e.target.closest('a');
+                if (link) {
+                    e.preventDefault();
+                    pendingUrl = link.href;
+                    linkModal.style.display = 'flex';
+                }
+            });
+
+            linkNewBtn.addEventListener('click', () => {
+                if (pendingUrl) {
+                    window.open(pendingUrl, '_blank', 'noopener,noreferrer');
+                }
+                linkModal.style.display = 'none';
+                pendingUrl = '';
+            });
+
+            linkCurrentBtn.addEventListener('click', () => {
+                if (pendingUrl) {
+                    window.location.href = pendingUrl;
+                }
+                linkModal.style.display = 'none';
+                pendingUrl = '';
+            });
+
+            linkCancelBtn.addEventListener('click', () => {
+                linkModal.style.display = 'none';
+                pendingUrl = '';
+            });
+
+            linkModal.addEventListener('click', (e) => {
+                if (e.target === linkModal) {
+                    linkModal.style.display = 'none';
+                    pendingUrl = '';
+                }
+            });
+        }
+
 
         // Chat Logic
         const chatInput = document.getElementById('ai-chat-input');

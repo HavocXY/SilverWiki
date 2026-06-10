@@ -39,7 +39,21 @@
         <textarea id="ai-chat-input" placeholder="Stelle eine Frage..." rows="1"></textarea>
         <button id="ai-chat-send" class="ai-chat-send-btn">Senden</button>
     </div>
+
+    <!-- Link Confirmation Modal -->
+    <div id="ai-chat-link-modal" class="ai-chat-modal" style="display: none;">
+        <div class="ai-chat-modal-content">
+            <div class="ai-chat-modal-title">Link öffnen</div>
+            <p class="ai-chat-modal-text">Möchten Sie diesen Link im aktuellen Fenster oder in einem neuen Browser-Tab öffnen?</p>
+            <div class="ai-chat-modal-buttons">
+                <button id="ai-chat-link-new" class="ai-chat-btn primary">Neuer Tab</button>
+                <button id="ai-chat-link-current" class="ai-chat-btn secondary">Aktueller Tab</button>
+                <button id="ai-chat-link-cancel" class="ai-chat-btn cancel">Abbrechen</button>
+            </div>
+        </div>
+    </div>
 </div>
+
 
 <button id="ai-chat-trigger" class="ai-chat-trigger-btn">
     <span class="icon">🐛</span> Bookworm

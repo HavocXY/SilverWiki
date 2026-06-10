@@ -1718,3 +1718,108 @@ html.density-dense .datatable-pagination a {
   50% { background-position: 100% 50%; }
   100% { background-position: 0% 50%; }
 }
+
+/* ── Custom Link Confirmation Modal ───────────────────────────────────────── */
+.ai-chat-modal {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(15, 23, 42, 0.6);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 10001;
+  animation: modal-fade-in 0.2s cubic-bezier(0.2, 0, 0, 1);
+}
+
+@keyframes modal-fade-in {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+.ai-chat-modal-content {
+  background: var(--w-bg-surface);
+  border: 1px solid var(--w-border-strong);
+  border-radius: 16px;
+  padding: 24px;
+  width: 85%;
+  max-width: 320px;
+  box-shadow: var(--w-shadow-dropdown);
+  text-align: center;
+  animation: modal-slide-up 0.3s cubic-bezier(0.2, 0, 0, 1);
+}
+
+@keyframes modal-slide-up {
+  from { transform: translateY(20px); opacity: 0; }
+  to { transform: translateY(0); opacity: 1; }
+}
+
+.ai-chat-modal-title {
+  font-family: var(--font-heading);
+  font-weight: 700;
+  font-size: 18px;
+  color: var(--w-text-heading);
+  margin-bottom: 12px;
+}
+
+.ai-chat-modal-text {
+  font-family: var(--font-body);
+  font-size: 13.5px;
+  color: var(--w-text-secondary);
+  line-height: 1.5;
+  margin-bottom: 20px;
+}
+
+.ai-chat-modal-buttons {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.ai-chat-btn {
+  padding: 10px 16px;
+  border-radius: 8px;
+  font-family: var(--font-body);
+  font-weight: 600;
+  font-size: 13px;
+  cursor: pointer;
+  border: none;
+  transition: all 0.2s ease;
+  width: 100%;
+}
+
+.ai-chat-btn.primary {
+  background: var(--gemini-gradient);
+  color: #ffffff;
+}
+
+.ai-chat-btn.primary:hover {
+  filter: brightness(1.1);
+  box-shadow: 0 4px 12px rgba(91, 83, 232, 0.3);
+}
+
+.ai-chat-btn.secondary {
+  background: var(--w-bg-subtle);
+  border: 1px solid var(--w-border);
+  color: var(--w-text-secondary);
+}
+
+.ai-chat-btn.secondary:hover {
+  background: var(--w-bg-hover);
+  color: var(--w-text);
+}
+
+.ai-chat-btn.cancel {
+  background: transparent;
+  color: var(--w-text-dimmest);
+}
+
+.ai-chat-btn.cancel:hover {
+  color: var(--w-text-muted);
+  background: var(--w-bg-hover);
+}
+

@@ -38,10 +38,10 @@ const path = require('path');
     if (!isVisible) throw new Error('Chat widget container is not visible after click!');
     console.log('✅ Chat widget container is open and visible.');
     
-    // Verify LocalStorage state
-    const localStorageOpen = await page.evaluate(() => localStorage.getItem('silverwiki_chat_open'));
-    console.log(`LocalStorage silverwiki_chat_open: ${localStorageOpen}`);
-    if (localStorageOpen !== 'true') throw new Error('LocalStorage state not updated on open!');
+    // Verify SessionStorage state
+    const sessionStorageOpen = await page.evaluate(() => sessionStorage.getItem('silverwiki_chat_open'));
+    console.log(`SessionStorage silverwiki_chat_open: ${sessionStorageOpen}`);
+    if (sessionStorageOpen !== 'true') throw new Error('SessionStorage state not updated on open!');
     
     // Close the chat widget so it does not intercept clicks on the tweaks panel!
     console.log('Closing Chat widget to test layout toggles...');
@@ -177,34 +177,82 @@ const path = require('path');
     }
     console.log('✅ RAG successfully retrieved and LLM returned the correct answer!');
     
-    // Step 8: Verify Clickable Markdown Links
+    // Step 8: Verify Clickable Markdown Links & Confirmation Modal
     console.log('Step 8: Verifying Markdown Link parsing & rendering in Chat UI...');
     const messageContainer = page.locator('#ai-chat-messages .ai-chat-message.system').last();
     
     // Check if there is an anchor tag inside the response
-    const anchor = messageContainer.locator('a');
-    const count = await anchor.count();
-    console.log(`Number of clickable source links in response: ${count}`);
+    const anchor = messageContainer.locator('a').first();
+    await anchor.waitFor();
+    const linkText = await anchor.innerText();
+    const linkHref = await anchor.getAttribute('href');
     
-    if (count === 0) {
-      throw new Error('No source links rendered as clickable HTML anchor tags!');
-    }
-    
-    const linkText = await anchor.first().innerText();
-    const linkHref = await anchor.first().getAttribute('href');
-    const targetAttr = await anchor.first().getAttribute('target');
-    
-    console.log(`First Link Text: "${linkText}"`);
-    console.log(`First Link Href: "${linkHref}"`);
-    console.log(`First Link Target: "${targetAttr}"`);
+    console.log(`Source Link Text: "${linkText}"`);
+    console.log(`Source Link Href: "${linkHref}"`);
     
     if (!linkHref || !linkHref.includes('/books/')) {
       throw new Error(`Invalid link href: "${linkHref}". Expected BookStack entity URL.`);
     }
-    if (targetAttr !== '_blank') {
-      throw new Error(`Expected link target to be "_blank", got "${targetAttr}"`);
+
+    const linkModal = page.locator('#ai-chat-link-modal');
+    
+    // 1. Verify modal is hidden initially
+    const isModalVisibleInit = await linkModal.isVisible();
+    if (isModalVisibleInit) throw new Error('Link confirmation modal should be hidden initially!');
+    
+    // 2. Click link, verify modal appears
+    console.log('Clicking source link to trigger confirmation modal...');
+    await anchor.click();
+    await page.waitForTimeout(300);
+    const isModalVisibleAfterClick = await linkModal.isVisible();
+    if (!isModalVisibleAfterClick) throw new Error('Link confirmation modal is not visible after link click!');
+    console.log('✅ Link confirmation modal displayed successfully.');
+    
+    // 3. Click Cancel button, verify modal disappears
+    console.log('Testing "Cancel" button on the modal...');
+    const cancelBtn = page.locator('#ai-chat-link-cancel');
+    await cancelBtn.click();
+    await page.waitForTimeout(300);
+    const isModalVisibleAfterCancel = await linkModal.isVisible();
+    if (isModalVisibleAfterCancel) throw new Error('Link confirmation modal did not hide after clicking Cancel!');
+    console.log('✅ Cancel button dismissed the modal successfully.');
+    
+    // 4. Click link, click "New Tab" button, verify popup opened
+    console.log('Testing "New Tab" button on the modal...');
+    await anchor.click();
+    await page.waitForSelector('#ai-chat-link-modal', { state: 'visible' });
+    
+    const [popup] = await Promise.all([
+      page.waitForEvent('popup'),
+      page.click('#ai-chat-link-new')
+    ]);
+    
+    await popup.waitForLoadState();
+    const popupUrl = popup.url();
+    console.log(`Opened popup URL: ${popupUrl}`);
+    if (!popupUrl.includes(linkHref)) {
+      throw new Error(`Popup opened with unexpected URL: ${popupUrl}, expected to contain ${linkHref}`);
     }
-    console.log('✅ Markdown links successfully converted to secure, clickable external HTML links!');
+    await popup.close();
+    console.log('✅ "New Tab" option opened link in a new browser tab successfully.');
+    
+    // 5. Click link, click "Current Tab" button, verify navigation
+    console.log('Testing "Current Tab" button on the modal...');
+    await anchor.click();
+    await page.waitForSelector('#ai-chat-link-modal', { state: 'visible' });
+    
+    await Promise.all([
+      page.waitForNavigation(),
+      page.click('#ai-chat-link-current')
+    ]);
+    
+    const currentUrl = page.url();
+    console.log(`Current tab navigated to URL: ${currentUrl}`);
+    if (!currentUrl.includes(linkHref)) {
+      throw new Error(`Current tab navigated to unexpected URL: ${currentUrl}, expected to contain ${linkHref}`);
+    }
+    console.log('✅ "Current Tab" option navigated successfully in the current tab.');
+
     
     // Take screenshot of chat for visual inspection
     const chatScreenshotPath = path.join(artifactDir, 'chat_assistant_response.png');
