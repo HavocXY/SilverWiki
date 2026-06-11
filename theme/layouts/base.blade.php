@@ -20,7 +20,7 @@
     <!-- Styles -->
     <link rel="stylesheet" href="{{ versioned_asset('dist/styles.css') }}">
     <!-- SilverWiki custom styles -->
-    <link rel="stylesheet" href="/theme/silverwiki/css/silverwiki.css">
+    <link rel="stylesheet" href="/theme/silverwiki/css/silverwiki.css?v=1.1.1">
 
     <!-- Icons -->
     <link rel="icon" type="image/png" sizes="256x256" href="{{ setting('app-icon') ?: url('/icon.png') }}">
@@ -53,6 +53,8 @@
             document.documentElement.classList.add('density-' + density);
             var bg = localStorage.getItem('silverwiki_bg_style') || 'gradient';
             document.documentElement.classList.add('bg-' + bg);
+            var preset = localStorage.getItem('silverwiki_theme_preset') || 'standard';
+            document.documentElement.classList.add('theme-preset-' + preset);
         })();
     </script>
 </head>
@@ -101,6 +103,16 @@
             </div>
         </div>
         
+        <!-- Design Theme Selection -->
+        <div class="tweaks-section">
+            <div class="tweaks-section-title">{{ trans('silverwiki.tweaks_section_preset') }}</div>
+            <div class="tweaks-options-group">
+                <button class="tweaks-option-btn" data-tweak-group="preset" data-tweak-value="standard">{{ trans('silverwiki.tweaks_preset_standard') }}</button>
+                <button class="tweaks-option-btn" data-tweak-group="preset" data-tweak-value="linear">{{ trans('silverwiki.tweaks_preset_linear') }}</button>
+                <button class="tweaks-option-btn" data-tweak-group="preset" data-tweak-value="claude">{{ trans('silverwiki.tweaks_preset_claude') }}</button>
+            </div>
+        </div>
+        
         <!-- Density Selection -->
         <div class="tweaks-section">
             <div class="tweaks-section-title">{{ trans('silverwiki.tweaks_section_density') }}</div>
@@ -140,6 +152,6 @@
     @include('layouts.parts.ai-chat')
 
     <!-- SilverWiki custom logic -->
-    <script src="/theme/silverwiki/js/silverwiki.js" @if($cspNonce ?? false) nonce="{{ $cspNonce }}" @endif defer></script>
+    <script src="/theme/silverwiki/js/silverwiki.js?v=1.1.1" @if($cspNonce ?? false) nonce="{{ $cspNonce }}" @endif defer></script>
 </body>
 </html>

@@ -22,6 +22,11 @@ document.addEventListener('DOMContentLoaded', () => {
         htmlEl.classList.add('bg-flat');
     }
 
+    // Design Theme Preset
+    const savedPreset = localStorage.getItem('silverwiki_theme_preset') || 'standard';
+    htmlEl.classList.remove('theme-preset-standard', 'theme-preset-linear', 'theme-preset-claude');
+    htmlEl.classList.add('theme-preset-' + savedPreset);
+
     // ── 2. Tweaks Panel Toggle ───────────────────────────────────────────────
     const tweaksBtn = document.querySelector('.silverwiki-tweaks-btn');
     const tweaksPanel = document.querySelector('.silverwiki-tweaks-panel');
@@ -55,6 +60,7 @@ document.addEventListener('DOMContentLoaded', () => {
     // Set initial active button states
     updateActiveButton('density', savedDensity);
     updateActiveButton('bgStyle', savedBgStyle);
+    updateActiveButton('preset', savedPreset);
     
     // Density Handlers
     document.querySelectorAll('[data-tweak-group="density"]').forEach(btn => {
@@ -85,6 +91,17 @@ document.addEventListener('DOMContentLoaded', () => {
             }
             localStorage.setItem('silverwiki_bg_style', val);
             updateActiveButton('bgStyle', val);
+        });
+    });
+
+    // Design Theme Preset Handlers
+    document.querySelectorAll('[data-tweak-group="preset"]').forEach(btn => {
+        btn.addEventListener('click', () => {
+            const val = btn.getAttribute('data-tweak-value');
+            htmlEl.classList.remove('theme-preset-standard', 'theme-preset-linear', 'theme-preset-claude');
+            htmlEl.classList.add('theme-preset-' + val);
+            localStorage.setItem('silverwiki_theme_preset', val);
+            updateActiveButton('preset', val);
         });
     });
 

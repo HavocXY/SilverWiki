@@ -76,43 +76,55 @@
             @endphp
             <div component="setting-app-color-scheme"
                  option:setting-app-color-scheme:mode="{{ $darkMode ? 'dark' : 'light' }}"
-                 class="pb-l">
-                <div class="mb-l">
-                    <label class="setting-list-label">{{ trans('settings.color_scheme') }}</label>
-                    <p class="small">{{ trans('settings.color_scheme_desc') }}</p>
+                 class="pb-l setting-color-scheme-wrapper">
+                
+                <div class="silverwiki-theme-warning-banner">
+                    <div class="warning-banner-content">
+                        <span class="material-symbols-outlined">info</span>
+                        <p class="warning-banner-text">
+                            <strong>{{ trans('silverwiki.settings_warning_title') }}</strong> {{ trans('silverwiki.settings_warning_desc') }}
+                        </p>
+                    </div>
                 </div>
 
-                <div component="tabs" class="tab-container">
-                    <div role="tablist" class="controls-card">
-                        <button type="button"
-                                role="tab"
-                                id="color-scheme-tab-light"
-                                aria-selected="{{ $darkMode ? 'false' : 'true' }}"
-                                aria-controls="color-scheme-panel-light">@icon('light-mode'){{ trans('common.light_mode') }}</button>
-                        <button type="button"
-                                role="tab"
-                                id="color-scheme-tab-dark"
-                                aria-selected="{{ $darkMode ? 'true' : 'false' }}"
-                                aria-controls="color-scheme-panel-dark">@icon('dark-mode'){{ trans('common.dark_mode') }}</button>
+                <div class="color-scheme-controls-container">
+                    <div class="mb-l">
+                        <label class="setting-list-label">{{ trans('settings.color_scheme') }}</label>
+                        <p class="small">{{ trans('settings.color_scheme_desc') }}</p>
                     </div>
-                    <div class="sub-card">
-                        <div id="color-scheme-panel-light"
-                             refs="setting-app-color-scheme@lightContainer"
-                             tabindex="0"
-                             role="tabpanel"
-                             aria-labelledby="color-scheme-tab-light"
-                             @if($darkMode) hidden @endif
-                             class="p-m">
-                            @include('settings.parts.setting-color-scheme', ['mode' => 'light'])
+
+                    <div component="tabs" class="tab-container">
+                        <div role="tablist" class="controls-card">
+                            <button type="button"
+                                    role="tab"
+                                    id="color-scheme-tab-light"
+                                    aria-selected="{{ $darkMode ? 'false' : 'true' }}"
+                                    aria-controls="color-scheme-panel-light">@icon('light-mode'){{ trans('common.light_mode') }}</button>
+                            <button type="button"
+                                    role="tab"
+                                    id="color-scheme-tab-dark"
+                                    aria-selected="{{ $darkMode ? 'true' : 'false' }}"
+                                    aria-controls="color-scheme-panel-dark">@icon('dark-mode'){{ trans('common.dark_mode') }}</button>
                         </div>
-                        <div id="color-scheme-panel-dark"
-                             refs="setting-app-color-scheme@darkContainer"
-                             tabindex="0"
-                             role="tabpanel"
-                             aria-labelledby="color-scheme-tab-light"
-                             @if(!$darkMode) hidden @endif
-                             class="p-m">
-                            @include('settings.parts.setting-color-scheme', ['mode' => 'dark'])
+                        <div class="sub-card">
+                            <div id="color-scheme-panel-light"
+                                 refs="setting-app-color-scheme@lightContainer"
+                                 tabindex="0"
+                                 role="tabpanel"
+                                 aria-labelledby="color-scheme-tab-light"
+                                 @if($darkMode) hidden @endif
+                                 class="p-m">
+                                @include('settings.parts.setting-color-scheme', ['mode' => 'light'])
+                            </div>
+                            <div id="color-scheme-panel-dark"
+                                 refs="setting-app-color-scheme@darkContainer"
+                                 tabindex="0"
+                                 role="tabpanel"
+                                 aria-labelledby="color-scheme-tab-light"
+                                 @if(!$darkMode) hidden @endif
+                                 class="p-m">
+                                @include('settings.parts.setting-color-scheme', ['mode' => 'dark'])
+                            </div>
                         </div>
                     </div>
                 </div>
